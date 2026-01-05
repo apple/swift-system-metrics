@@ -37,15 +37,15 @@ let serviceGroup = ServiceGroup(
 try await serviceGroup.run()
 ```
 
-See the [SystemMetrics documentation](https://swiftpackageindex.com/apple/swift-metrics-extras/documentation/systemmetrics) for details.
+See the [SystemMetrics documentation](https://swiftpackageindex.com/apple/swift-system-metrics/documentation/systemmetrics) for details.
 
 ## Installation
 
-Add SwiftMetricsExtras as a dependency in your `Package.swift`:
+Add SwiftSystemMetrics as a dependency in your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/apple/swift-metrics-extras.git", from: "1.0.0")
+    .package(url: "https://github.com/apple/swift-system-metrics.git", from: "1.0.0")
 ]
 ```
 
@@ -55,7 +55,7 @@ Then add ``SystemMetrics`` to your target:
 .target(
     name: "YourTarget",
     dependencies: [
-        .product(name: "SystemMetrics", package: "swift-metrics-extras")
+        .product(name: "SystemMetrics", package: "swift-system-metrics")
     ]
 )
 ```

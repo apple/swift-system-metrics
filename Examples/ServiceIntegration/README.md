@@ -24,7 +24,7 @@ This approach decouples the monitor from global state and allows you to use diff
 
 ## Running the Example
 
-From the `swift-metrics-extras` package root run:
+From the `swift-system-metrics` package root run:
 
 ```bash
 docker-compose -f Examples/ServiceIntegration/docker-compose.yaml up --build

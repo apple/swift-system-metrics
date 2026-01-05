@@ -3,7 +3,7 @@ ARG UBI_VERSION=9
 
 FROM docker.apple.com/base-images/ubi${UBI_VERSION}/swift${SWIFT_VERSION}-builder AS builder
 
-WORKDIR /swift-metrics-extras
+WORKDIR /swift-system-metrics
 
 # First just resolve dependencies.
 # This creates a cached layer that can be reused
@@ -25,7 +25,7 @@ FROM docker.apple.com/base-images/ubi${UBI_VERSION}-minimal/swift${SWIFT_VERSION
 
 USER root
 RUN mkdir -p /app/bin
-COPY --from=builder /swift-metrics-extras/Examples/ServiceIntegration/.build/release/ServiceIntegrationExample /app/bin
+COPY --from=builder /swift-system-metrics/Examples/ServiceIntegration/.build/release/ServiceIntegrationExample /app/bin
 RUN mkdir -p /logs && chown $NON_ROOT_USER_ID /logs
 USER $NON_ROOT_USER_ID
 

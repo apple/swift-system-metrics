@@ -23,7 +23,7 @@ The following metrics are collected:
 
 ### Basic usage
 
-After adding `swift-metrics-extras` as a dependency, import the `SystemMetrics` module:
+After adding `swift-system-metrics` as a dependency, import the `SystemMetrics` module:
 
 ```swift
 import SystemMetrics
