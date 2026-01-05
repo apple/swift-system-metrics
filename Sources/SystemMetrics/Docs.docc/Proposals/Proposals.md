@@ -1,10 +1,10 @@
 # Proposals
 
-Collaborate on API changes to Swift Metrics Extras by writing a proposal.
+Collaborate on API changes to Swift System Metrics by writing a proposal.
 
 ## Overview
 
-For non-trivial changes that affect the public API, the Swift Metrics Extras project adopts a lightweight version of the [Swift Evolution](https://github.com/apple/swift-evolution/blob/main/process.md) process.
+For non-trivial changes that affect the public API, the Swift System Metrics project adopts a lightweight version of the [Swift Evolution](https://github.com/apple/swift-evolution/blob/main/process.md) process.
 
 Writing a proposal first helps discuss multiple possible solutions early, apply useful feedback from other contributors, and avoid reimplementing the same feature multiple times.
 
