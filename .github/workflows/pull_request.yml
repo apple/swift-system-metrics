@@ -29,7 +29,7 @@ jobs:
     uses: apple/swift-nio/.github/workflows/macos_tests.yml@main
     with:
       runner_pool: general
-      build_scheme: swift-metrics-extras
+      build_scheme: swift-system-metrics
 
   static-sdk:
     name: Static SDK
@@ -52,7 +52,7 @@ jobs:
       - id: generate-matrix
         run: echo "example-packages-matrix=$(curl -s https://raw.githubusercontent.com/apple/swift-nio/main/scripts/generate_matrix.sh | bash)" >> "$GITHUB_OUTPUT"
         env:
-          MATRIX_LINUX_SETUP_COMMAND: git config --global --add safe.directory /swift-metrics-extras
+          MATRIX_LINUX_SETUP_COMMAND: git config --global --add safe.directory /swift-system-metrics
           MATRIX_LINUX_COMMAND: ./Scripts/test-examples.sh
           MATRIX_LINUX_5_10_ENABLED: false
           MATRIX_LINUX_6_0_ENABLED: false
