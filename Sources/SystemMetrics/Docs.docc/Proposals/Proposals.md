@@ -37,3 +37,4 @@ If you have any questions, ask in an issue on GitHub.
 
 - <doc:SSM-NNNN>
 - <doc:SSM-0001>
+- <doc:SSM-0002>

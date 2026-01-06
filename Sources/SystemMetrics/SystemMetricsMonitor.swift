@@ -19,7 +19,7 @@ public import ServiceLifecycle
 
 /// A monitor that periodically collects and reports system metrics.
 ///
-/// ``SystemMetricsMonitor`` provides a way to automatically collect process-level system metrics
+/// `SystemMetricsMonitor` provides a way to automatically collect process-level system metrics
 /// (such as memory usage, CPU time) and report them through the Swift Metrics API.
 ///
 /// Example usage:

@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 extension SystemMetricsMonitor {
-    /// This object controls the behaviour of the ``SystemMetricsMonitor``.
+    /// The configureation that controls the behavior of the system metrics monitor.
     public struct Configuration: Sendable {
         /// Default SystemMetricsMonitor configuration.
         ///
@@ -29,10 +29,10 @@ extension SystemMetricsMonitor {
         /// Additional dimensions attached to every metric
         package let dimensions: [(String, String)]
 
-        /// Create new instance of ``Configuration``
+        /// Create new monitor configuration.
         ///
         /// - Parameters:
-        ///     - interval: The interval at which system metrics should be updated.
+        ///     - interval: The interval at which system metrics should be updated, defaults to 2 seconds.
         public init(
             pollInterval interval: Duration = .seconds(2)
         ) {
@@ -41,7 +41,7 @@ extension SystemMetricsMonitor {
             self.dimensions = []
         }
 
-        /// Create new instance of ``SystemMetricsMonitor.Configuration``
+        /// Creates a new configuration.
         ///
         /// - Parameters:
         ///     - interval: The interval at which system metrics should be updated.
