@@ -18,12 +18,11 @@ import Darwin
 extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
     /// Collect current system metrics data.
     ///
-    /// On supported Darwin platforms, this delegates to the static
+    /// On supported Darwin platforms, this method delegates to the static
     /// `darwinSystemMetrics()` function.
     ///
-    /// - Note: System metrics collection is not yet implemented for Darwin-based
-    ///         platforms other than macOS. This method always returns `nil` on
-    ///         other platforms.
+    /// - Note: This method doesn't yet support Darwin-based platforms other than
+    ///         macOS and always returns `nil` on those platforms.
     /// - Returns: Current system metrics, or `nil` if collection failed.
     package func data() async -> SystemMetricsMonitor.Data? {
         #if os(macOS)

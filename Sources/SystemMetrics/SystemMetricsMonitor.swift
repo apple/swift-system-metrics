@@ -19,8 +19,8 @@ public import ServiceLifecycle
 
 /// A monitor that periodically collects and reports system metrics.
 ///
-/// `SystemMetricsMonitor` provides a way to automatically collect process-level system metrics
-/// (such as memory usage, CPU time) and report them through the Swift Metrics API.
+/// `SystemMetricsMonitor` automatically collects process-level system metrics
+/// (such as memory usage and CPU time) and reports them through the Swift Metrics API.
 ///
 /// Example usage:
 /// ```swift
@@ -169,7 +169,7 @@ public struct SystemMetricsMonitor: Service {
     ///
     /// This method collects current system metrics and reports them as gauges
     /// using the configured labels and dimensions. If metric collection fails
-    /// or is unsupported on the current platform, this method returns without
+    /// or the current platform doesn't support it, this method returns without
     /// reporting any metrics.
     package func updateMetrics() async {
         guard let metrics = await self.dataProvider.data() else {
@@ -219,23 +219,23 @@ public struct SystemMetricsMonitor: Service {
     }
 }
 
-/// A protocol for providing system metrics data.
+/// Provides system metrics data.
 ///
-/// Types conforming to this protocol can provide system metrics data
+/// Types that conform to this protocol provide system metrics data
 /// to a ``SystemMetricsMonitor``. This allows for flexible data collection
 /// strategies, including custom implementations for testing.
 package protocol SystemMetricsProvider: Sendable {
     /// Retrieve current system metrics data.
     ///
     /// - Returns: Current system metrics, or `nil` if collection failed
-    ///            or is unsupported on the current platform.
+    ///            or the current platform doesn't support it.
     func data() async -> SystemMetricsMonitor.Data?
 }
 
-/// Default implementation of ``SystemMetricsProvider`` for collecting system metrics data.
+/// Default implementation of ``SystemMetricsProvider`` that collects system metrics data.
 ///
 /// This provider collects process-level metrics from the operating system.
-/// It is used as the default data provider when no custom provider is specified.
+/// Use this provider as the default when you don't specify a custom provider.
 package struct SystemMetricsMonitorDataProvider: Sendable {
     let configuration: SystemMetricsMonitor.Configuration
 
@@ -245,7 +245,7 @@ package struct SystemMetricsMonitorDataProvider: Sendable {
 }
 
 extension SystemMetricsMonitor {
-    /// System Metrics data.
+    /// System metrics data.
     ///
     /// The current list of metrics exposed is a superset of the [Prometheus Client Library Guidelines](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
     package struct Data: Sendable {
@@ -264,7 +264,7 @@ extension SystemMetricsMonitor {
 
         /// Create a new `Data` instance.
         ///
-        /// - parameters:
+        /// - Parameters:
         ///     - virtualMemoryBytes: Virtual memory size in bytes
         ///     - residentMemoryBytes: Resident memory size in bytes.
         ///     - startTimeSeconds: Process start time since Unix epoch in seconds.

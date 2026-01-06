@@ -12,18 +12,18 @@ The following metrics are collected:
 
 - **Virtual Memory**: Total virtual memory allocated by the process (in bytes), reported as `process_virtual_memory_bytes`.
 - **Resident Memory**: Physical memory currently used by the process (in bytes), reported as `process_resident_memory_bytes`.
-- **Start Time**: Process start time since Unix epoch (in seconds), reported as `process_start_time_seconds`.
+- **Start Time**: Process start time since UNIX epoch (in seconds), reported as `process_start_time_seconds`.
 - **CPU Time**: Cumulative CPU time consumed (in seconds), reported as `process_cpu_seconds_total`.
 - **Max File Descriptors**: Maximum number of file descriptors the process can open, reported as `process_max_fds`.
 - **Open File Descriptors**: Number of file descriptors currently open, reported as `process_open_fds`.
 
-> Note: These metrics are currently implemented on Linux and macOS platforms only.
+> Note: These metrics are available on Linux and macOS platforms only.
 
-## Getting started
+## Get started
 
-### Basic usage
+### Use the basic configuration
 
-After adding `swift-system-metrics` as a dependency, import the `SystemMetrics` module:
+Add `swift-system-metrics` as a dependency, then import the `SystemMetrics` module:
 
 ```swift
 import SystemMetrics
@@ -51,11 +51,11 @@ let serviceGroup = ServiceGroup(
 try await serviceGroup.run()
 ```
 
-The monitor will collect and report metrics periodically using the global `MetricsSystem`.
+The monitor collects and reports metrics periodically using the global `MetricsSystem`.
 
-## Configuration
+## Configure the monitor
 
-Polling interval can be configured through the ``SystemMetricsMonitor/Configuration``:
+Configure the polling interval through ``SystemMetricsMonitor/Configuration``:
 
 ```swift
 let systemMetricsMonitor = SystemMetricsMonitor(
@@ -64,17 +64,17 @@ let systemMetricsMonitor = SystemMetricsMonitor(
 )
 ```
 
-## Using custom Metrics Factory
+## Use a custom metrics factory
 
-``SystemMetricsMonitor`` can be initialized with a specific metrics factory, so it does not rely on the global `MetricsSystem`:
+Initialize ``SystemMetricsMonitor`` with a specific metrics factory so it doesn't rely on the global `MetricsSystem`:
 
 ```swift
 let monitor = SystemMetricsMonitor(metricsFactory: myPrometheusMetricsFactory, logger: logger)
 ```
 
-## Swift Service Lifecycle integration
+## Integrate with Swift Service Lifecycle
 
-[Swift Service Lifecycle](https://github.com/swift-server/swift-service-lifecycle) provides a convenient way to manage background service tasks, which is compatible with the `SystemMetricsMonitor`:
+[Swift Service Lifecycle](https://github.com/swift-server/swift-service-lifecycle) manages background service tasks and is compatible with `SystemMetricsMonitor`:
 
 ```swift
 import SystemMetrics
@@ -106,7 +106,7 @@ struct Application {
 
 ## Topics
 
-### Monitoring System Metrics
+### Monitor system metrics
 
 - ``SystemMetricsMonitor``
 

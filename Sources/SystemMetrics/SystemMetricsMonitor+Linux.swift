@@ -142,14 +142,14 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
     /// - `/proc/self/fd/` directory enumeration - Count of open file descriptors
     ///
     /// - Returns: A `Data` struct containing all collected metrics, or `nil` if
-    ///            metrics could not be collected (e.g., due to file read errors).
+    ///            the function can't collect metrics (for example, due to file read errors).
     package static func linuxSystemMetrics() -> SystemMetricsMonitor.Data? {
         /// The current implementation below reads /proc/self/stat. Then,
         /// presumably to accommodate whitespace in the `comm` field
         /// without dealing with null-terminated C strings, it splits on the
         /// closing parenthesis surrounding the value. It then splits the
         /// remaining string by space, meaning the first element in the
-        /// resulting array, at index 0, refers to the the third field.
+        /// resulting array, at index 0, refers to the third field.
         ///
         /// Note that the man page documents fields starting at index 1.
         ///
@@ -196,8 +196,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             static let startTimeTicks = 19
         }
 
-        /// Use sysconf to get system configuration values that do not change
-        /// during the lifetime of the process. They are used later to convert
+        /// Use sysconf to get system configuration values that don't change
+        /// during the lifetime of the process. The code uses them later to convert
         /// ticks into seconds and memory pages into total bytes.
         enum SystemConfiguration {
             static let clockTicksPerSecond = sysconf(Int32(_SC_CLK_TCK))
