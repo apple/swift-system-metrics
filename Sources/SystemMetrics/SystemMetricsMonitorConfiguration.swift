@@ -20,8 +20,8 @@ extension SystemMetricsMonitor {
         /// See individual property documentation for specific default values.
         public static let `default`: Self = .init()
 
-        /// The interval between system metrics data scraping. 
-        /// 
+        /// The interval between system metrics data scraping.
+        ///
         /// The default interval is 2 seconds.
         public var interval: Duration
 
