@@ -58,7 +58,7 @@ public struct SystemMetricsMonitor: Service {
     let maxFileDescriptorsGauge: Gauge
     let openFileDescriptorsGauge: Gauge
 
-    /// Create a new ``SystemMetricsMonitor`` using the global metrics factory.
+    /// Create a new monitor for system metrics using the global metrics factory.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
@@ -110,7 +110,7 @@ public struct SystemMetricsMonitor: Service {
         )
     }
 
-    /// Create a new ``SystemMetricsMonitor`` with a custom data provider.
+    /// Create a new monitor for system metrics with a custom data provider.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
@@ -129,7 +129,7 @@ public struct SystemMetricsMonitor: Service {
         )
     }
 
-    /// Create a new ``SystemMetricsMonitor`` with a custom metrics factory.
+    /// Create a new monitor for system metrics with a custom metrics factory.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
@@ -148,7 +148,7 @@ public struct SystemMetricsMonitor: Service {
         )
     }
 
-    /// Create a new ``SystemMetricsMonitor`` using the global metrics factory.
+    /// Create a new monitor for system metrics using the global metrics factory.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
