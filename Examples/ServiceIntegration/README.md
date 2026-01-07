@@ -22,15 +22,15 @@ let systemMetricsMonitor = SystemMetricsMonitor(
 
 This approach decouples the monitor from global state and allows you to use different metrics backends for different components.
 
-## Running the Example
+## Running the example
 
-From the `swift-system-metrics` package root run:
+From the `swift-system-metrics` package root, run:
 
 ```bash
 docker-compose -f Examples/ServiceIntegration/docker-compose.yaml up --build
 ```
 
-This will build and run 2 containers: `grafana` and `systemmetricsmonitor`.
+The command builds and runs 2 containers: `grafana` and `systemmetricsmonitor`.
 
 ## Grafana Dashboard
 
@@ -42,6 +42,6 @@ The dashboard provides four visualizations that map to the metrics collected by 
 
 1. CPU Usage % calculated as `rate(process_cpu_seconds_total)`.
 
-1. Residential Memory (`process_resident_memory_bytes`) and Virtual Memory (`process_virtual_memory_bytes`) consumption.
+1. Resident Memory (`process_resident_memory_bytes`) and Virtual Memory (`process_virtual_memory_bytes`) consumption.
 
 1. Open File Descriptors (`process_open_fds`) and Max File Descriptors (`process_max_fds`)

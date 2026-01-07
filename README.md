@@ -2,9 +2,9 @@
 
 Automatically collects process-level system metrics (memory, CPU, file descriptors) and reports them through the [SwiftMetrics](https://github.com/apple/swift-metrics) API.
 
-## Collected Metrics
+## Collected metrics
 
-The following metrics are collected and reported as gauges:
+The monitor collects and reports the following metrics as gauges:
 
 - **Virtual Memory** (`process_virtual_memory_bytes`) - Virtual memory size in bytes
 - **Resident Memory** (`process_resident_memory_bytes`) - Resident Set Size (RSS) in bytes
@@ -49,7 +49,7 @@ dependencies: [
 ]
 ```
 
-Then add ``SystemMetrics`` to your target:
+Then add `SystemMetrics` to your target:
 
 ```swift
 .target(
@@ -60,9 +60,9 @@ Then add ``SystemMetrics`` to your target:
 )
 ```
 
-## Example & Grafana Dashboard
+## Example and Grafana dashboard
 
-A complete working example with a pre-built Grafana dashboard is available in [Examples/ServiceIntegration](Examples/ServiceIntegration). The example includes:
+[Examples/ServiceIntegration](Examples/ServiceIntegration) provides a complete working example with a pre-built Grafana dashboard. The example includes:
 
 - `SwiftServiceLifecycle` integration.
 - `SwiftMetrics` configured to export the metrics.

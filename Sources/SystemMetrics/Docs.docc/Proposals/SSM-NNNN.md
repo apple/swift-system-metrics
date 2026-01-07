@@ -20,23 +20,23 @@ A short, one-sentence overview of the feature or change.
 
 ### Motivation
 
-Describe the problems that this proposal aims to address, and what workarounds adopters have to employ currently, if any.
+Describe the problems that this proposal addresses, and what workarounds adopters currently use, if any.
 
 ### Proposed solution
 
 Describe your solution to the problem. Provide examples and describe how they work. Show how your solution is better than current workarounds.
 
-This section should focus on what will change for the _adopters_ of Swift System Metrics.
+Focus this section on what will change for the _adopters_ of Swift System Metrics.
 
 ### Detailed design
 
-Describe the implementation of the feature, a link to a prototype implementation is encouraged here.
+Describe the implementation of the feature. Include a link to a prototype implementation.
 
-This section should focus on what will change for the _contributors_ to Swift System Metrics.
+Focus this section on what will change for the _contributors_ to Swift System Metrics.
 
 ### API stability
 
-Discuss the API implications, making sure to considering all of:
+Discuss the API implications, making sure to consider all of:
 - existing metrics data provider implementations
 - existing users of `SystemMetrics`
 
@@ -46,4 +46,4 @@ Discuss any potential future improvements to the feature.
 
 ### Alternatives considered
 
-Discuss the alternative solutions considered, even during the review process itself.
+Discuss the alternative solutions you considered, even during the review process itself.

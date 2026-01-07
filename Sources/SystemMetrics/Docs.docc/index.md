@@ -15,7 +15,7 @@ The monitor collects the following metrics:
 - **Max File Descriptors**: The maximum number of file descriptors the process can open. The monitor reports the metric as `process_max_fds`.
 - **Open File Descriptors**: The number of file descriptors the process currently has open. The monitor reports the metric as `process_open_fds`.
 
-> Note: These metrics work on Linux and macOS platforms only.
+> Note: The monitor supports these metrics only on Linux and macOS platforms.
 
 ## Topics
 
