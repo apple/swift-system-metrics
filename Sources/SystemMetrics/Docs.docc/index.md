@@ -17,6 +17,36 @@ The monitor collects the following metrics:
 
 > Note: The monitor supports these metrics only on Linux and macOS platforms.
 
+This example shows how to create a monitor and run it with the service group alongside your service:
+
+```swift
+import SystemMetrics
+import ServiceLifecycle
+import Metrics
+import Logging
+
+@main
+struct Application {
+  static func main() async throws {
+    let logger = Logger(label: "Application")
+    let metrics = MyMetricsBackendImplementation()
+    MetricsSystem.bootstrap(metrics)
+
+    let service = FooService()
+    let systemMetricsMonitor = SystemMetricsMonitor(logger: logger)
+
+    let serviceGroup = ServiceGroup(
+      services: [service, systemMetricsMonitor],
+      gracefulShutdownSignals: [.sigint],
+      cancellationSignals: [.sigterm],
+      logger: logger
+    )
+
+    try await serviceGroup.run()
+  }
+}
+```
+
 ## Topics
 
 ### Monitor system metrics
@@ -24,6 +54,6 @@ The monitor collects the following metrics:
 - <doc:GettingStarted>
 - ``SystemMetricsMonitor``
 
-### Contribution
+### Contribute to the project
 
 - <doc:Proposals>
