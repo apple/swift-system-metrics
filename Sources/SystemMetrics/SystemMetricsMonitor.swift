@@ -58,11 +58,11 @@ public struct SystemMetricsMonitor: Service {
     let maxFileDescriptorsGauge: Gauge
     let openFileDescriptorsGauge: Gauge
 
-    /// Create a new monitor for system metrics using the global metrics factory.
+    /// Create a new monitor for system metrics.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
-    ///   - metricsFactory: The metrics factory to use for creating metrics.
+    ///   - metricsFactory: The metrics factory to use for creating metrics. If `nil`, the monitor initializes with the global metrics factory.
     ///   - dataProvider: The provider to use for collecting system metrics data.
     ///   - logger: A custom logger.
     package init(
@@ -110,7 +110,7 @@ public struct SystemMetricsMonitor: Service {
         )
     }
 
-    /// Create a new monitor for system metrics with a custom data provider.
+    /// Create a new monitor for system metrics with a custom data provider that you provide.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
@@ -129,11 +129,11 @@ public struct SystemMetricsMonitor: Service {
         )
     }
 
-    /// Create a new monitor for system metrics with a custom metrics factory.
+    /// Create a new monitor for system metrics that send metrics to backend using the metrics factory that you provide.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
-    ///   - metricsFactory: The metrics factory to use for creating metrics.
+    ///   - metricsFactory: The [metrics factory](https://swiftpackageindex.com/apple/swift-metrics/documentation/coremetrics/metricsfactory) to use for creating metrics.
     ///   - logger: A custom logger.
     public init(
         configuration: SystemMetricsMonitor.Configuration = .default,
@@ -149,6 +149,12 @@ public struct SystemMetricsMonitor: Service {
     }
 
     /// Create a new monitor for system metrics using the global metrics factory.
+    ///
+    /// If you can't, or don't want to use the process global metrics that the Metrics API provides,
+    /// consider using ``init(configuration:metricsFactory:logger:)`` instead.
+    /// For example, if you have different backends for different metrics,
+    /// use a [metrics factory](https://swiftpackageindex.com/apple/swift-metrics/documentation/coremetrics/metricsfactory)
+    /// from the backend where you want to send system metrics.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.
@@ -232,7 +238,7 @@ package protocol SystemMetricsProvider: Sendable {
     func data() async -> SystemMetricsMonitor.Data?
 }
 
-/// Default implementation of ``SystemMetricsProvider`` that collects system metrics data.
+/// Default implementation of system metrics provider that collects system metrics data.
 ///
 /// This provider collects process-level metrics from the operating system.
 /// Use this provider as the default when you don't specify a custom provider.
@@ -247,13 +253,14 @@ package struct SystemMetricsMonitorDataProvider: Sendable {
 extension SystemMetricsMonitor {
     /// System metrics data.
     ///
-    /// The current list of metrics exposed is a superset of the [Prometheus Client Library Guidelines](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
+    /// The current list of metrics exposed is a superset of the
+    /// [Prometheus Client Library Guidelines](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors).
     package struct Data: Sendable {
         /// Virtual memory size in bytes.
         package var virtualMemoryBytes: Int
         /// Resident memory size in bytes.
         package var residentMemoryBytes: Int
-        /// Start time of the process since Unix epoch in seconds.
+        /// Start time of the process since UNIX epoch in seconds.
         package var startTimeSeconds: Int
         /// Total user and system CPU time spent in seconds.
         package var cpuSeconds: Double
@@ -262,12 +269,12 @@ extension SystemMetricsMonitor {
         /// Number of open file descriptors.
         package var openFileDescriptors: Int
 
-        /// Create a new `Data` instance.
+        /// Create a new instance of metrics data.
         ///
         /// - Parameters:
         ///     - virtualMemoryBytes: Virtual memory size in bytes
         ///     - residentMemoryBytes: Resident memory size in bytes.
-        ///     - startTimeSeconds: Process start time since Unix epoch in seconds.
+        ///     - startTimeSeconds: Process start time since UNIX epoch in seconds.
         ///     - cpuSeconds: Total user and system CPU time spent in seconds.
         ///     - maxFileDescriptors: Maximum number of open file descriptors.
         ///     - openFileDescriptors: Number of open file descriptors.

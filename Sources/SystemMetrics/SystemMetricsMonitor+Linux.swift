@@ -94,7 +94,7 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
 
     private static let systemStartTimeInSecondsSinceEpoch: Int? = {
         // Read system boot time from /proc/stat btime field
-        // This provides the Unix timestamp when the system was booted
+        // This provides the UNIX timestamp when the system was booted
         let systemStatFile = CFile("/proc/stat")
         systemStatFile.open()
         defer {
