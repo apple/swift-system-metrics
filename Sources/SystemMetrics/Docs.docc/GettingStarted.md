@@ -1,6 +1,6 @@
-# Capturing and reporting host system metrics
+# Capturing and reporting process metrics
 
-Use the system metrics monitor in your application to provide metrics from the host system where you run your service.
+Use the system metrics monitor in your application to provide metrics from the process where you run your service.
 
 ### Add the project dependency
 
@@ -16,7 +16,7 @@ swift package add-target-dependency SystemMetrics MyExecutableTarget --package s
 
 ### Create a system monitor service
 
-Import the `SystemMetrics` module, then create and add your monitor to a service group.
+Import the `SystemMetrics` module, then create and add a ``SystemMetricsMonitor`` to a service group.
 
 ```swift
 import SystemMetrics
@@ -30,7 +30,7 @@ let systemMetricsMonitor = SystemMetricsMonitor(logger: logger)
 ```
 
 The monitor collects and reports metrics periodically using the global `MetricsSystem` that Swift Metrics provides.
-You can configure the polling interval with your own ``SystemMetricsMonitor/Configuration`` when you create the monitor:
+You can configure the polling interval with your own ``SystemMetricsMonitor/Configuration``, as well as the `MetricsSystem`, when you create the monitor:
 
 ```swift
 let systemMetricsMonitor = SystemMetricsMonitor(
@@ -42,7 +42,7 @@ let systemMetricsMonitor = SystemMetricsMonitor(
 ### Run the service in your app
 
 Use [Swift Service Lifecycle](https://github.com/swift-server/swift-service-lifecycle) to run the monitor as a background service with support for graceful shutdown and UNIX signal handling.
-To do so, include the system metrics monitor you created into a service group and run the group in your application.
+To do so, include the system metrics monitor you created in a service group and run the group in your application.
 
 The following code bootstraps your own metrics backend, creates a system metrics monitor, and uses service lifecycle to run both: 
 
@@ -50,6 +50,7 @@ The following code bootstraps your own metrics backend, creates a system metrics
 import SystemMetrics
 import ServiceLifecycle
 import Metrics
+import Logging
 
 @main
 struct Application {
