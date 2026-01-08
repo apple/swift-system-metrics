@@ -24,6 +24,6 @@ The monitor collects the following metrics:
 - <doc:GettingStarted>
 - ``SystemMetricsMonitor``
 
-### Contribute to the project
+### Contribution
 
 - <doc:Proposals>
