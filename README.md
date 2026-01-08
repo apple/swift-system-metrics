@@ -16,25 +16,34 @@ The monitor collects and reports the following metrics as gauges:
 ## Quick start
 
 ```swift
-import Logging
 import SystemMetrics
+import ServiceLifecycle
+import Metrics
+import Logging
 
-// Create a logger, or use one of the existing loggers
-let logger = Logger(label: "MyLogger")
+@main
+struct Application {
+  static func main() async throws {
+    // Create a logger, or use one of the existing loggers
+    let logger = Logger(label: "Application")
+    let metrics = MyMetricsBackendImplementation()
+    MetricsSystem.bootstrap(metrics)
 
-// Create the monitor
-let monitor = SystemMetricsMonitor(logger: logger)
+    let service = FooService()
+    // Create the monitor
+    let systemMetricsMonitor = SystemMetricsMonitor(logger: logger)
+    
+    // Create the service
+    let serviceGroup = ServiceGroup(
+      services: [service, systemMetricsMonitor],
+      gracefulShutdownSignals: [.sigint],
+      cancellationSignals: [.sigterm],
+      logger: logger
+    )
 
-// Create the service
-let serviceGroup = ServiceGroup(
-    services: [monitor],
-    gracefulShutdownSignals: [.sigint],
-    cancellationSignals: [.sigterm],
-    logger: logger
-)
-
-// Start collecting metrics
-try await serviceGroup.run()
+    try await serviceGroup.run()
+  }
+}
 ```
 
 See the [`SystemMetrics` documentation](https://swiftpackageindex.com/apple/swift-system-metrics/documentation/systemmetrics) for details.
@@ -45,7 +54,7 @@ Add Swift System Metrics as a dependency in your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/apple/swift-system-metrics.git", from: "1.0.0")
+  .package(url: "https://github.com/apple/swift-system-metrics.git", from: "1.0.0")
 ]
 ```
 
@@ -53,10 +62,10 @@ Then add `SystemMetrics` to your target:
 
 ```swift
 .target(
-    name: "YourTarget",
-    dependencies: [
-        .product(name: "SystemMetrics", package: "swift-system-metrics")
-    ]
+  name: "YourTarget",
+  dependencies: [
+    .product(name: "SystemMetrics", package: "swift-system-metrics")
+  ]
 )
 ```
 
