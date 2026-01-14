@@ -82,6 +82,8 @@ directory, for example:
 
 ## How to contribute your work
 
+For non-trivial changes that affect the public API, it is good practice to have a discussion phase before writing code. Please follow the [proposal process](Sources/SystemMetrics/Docs.docc/Proposals/Proposals.md) to gather feedback and align on the approach with other contributors.
+
 1. Prepare your change, keeping in mind that a good patch is:
   - Concise, and contains as few changes as needed to achieve the end result.
   - Tested, ensuring that any tests provided failed before the patch and pass after it.
