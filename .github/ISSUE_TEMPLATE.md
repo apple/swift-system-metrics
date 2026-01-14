@@ -13,8 +13,8 @@ _[what actually happened]_
 
 _[anything to help us reproducing the issue]_
 
-### SwiftMetrics version/commit hash
+### Swift System Metrics version/commit hash
 
-_[the SwiftMetrics tag/commit hash]_
+_[the Swift System Metrics tag/commit hash]_
 
 ### Swift & OS version (output of `swift --version && uname -a`)

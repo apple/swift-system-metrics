@@ -1,19 +1,39 @@
 # Swift System Metrics
 
-Automatically collects process-level system metrics (memory, CPU, file descriptors) and reports them through the [SwiftMetrics](https://github.com/apple/swift-metrics) API.
+[![](https://img.shields.io/badge/docc-read_documentation-blue)](https://swiftpackageindex.com/apple/swift-system-metrics/documentation)
+[![](https://img.shields.io/github/v/release/apple/swift-system-metrics)](https://github.com/apple/swift-system-metrics/releases)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fapple%2Fswift-system-metrics%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/apple/swift-system-metrics)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fapple%2Fswift-system-metrics%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/apple/swift-system-metrics)
 
-## Collected metrics
+A Swift library for reporting process-level system metrics (memory, CPU, file descriptors) to [Swift Metrics](https://github.com/apple/swift-metrics).
 
-The monitor collects and reports the following metrics as gauges:
+- 📚 **Documentation** is available on the [Swift Package Index](https://swiftpackageindex.com/apple/swift-system-metrics/documentation).
+- 💻 **Examples** are available in the [Examples](Examples/) directory.
+- 🚀 **Contributions** are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md).
+- 🪪 **License** is Apache 2.0, repeated in [LICENSE](LICENSE.txt).
+- 🔒 **Security** issues should be reported via the process in [SECURITY.md](SECURITY.md).
 
-- **Virtual Memory** (`process_virtual_memory_bytes`) - Virtual memory size in bytes
-- **Resident Memory** (`process_resident_memory_bytes`) - Resident Set Size (RSS) in bytes
-- **CPU Time** (`process_cpu_seconds_total`) - Total user and system CPU time spent in seconds
-- **Process Start Time** (`process_start_time_seconds`) - Process start time since Unix epoch in seconds
-- **Open File Descriptors** (`process_open_fds`) - Current number of open file descriptors
-- **Max File Descriptors** (`process_max_fds`) - Maximum number of open file descriptors allowed
+## Overview
+
+Swift System Metrics provides a type that periodically collects process-level system metrics and reports them to the Swift Metrics factory.
+
+This package is designed to be run in tools and applications directly and is not expected to be used from libraries. If you'd like to report additional metrics from your library, use [Swift Metrics](https://github.com/apple/swift-metrics) directly.
 
 ## Quick start
+
+Add the dependency to your `Package.swift`:
+
+```swift
+.package(url: "https://github.com/apple/swift-system-metrics", from: "1.0.0")
+```
+
+Add the library dependency to your target:
+
+```swift
+.product(name: "SystemMetrics", package: "swift-system-metrics")
+```
+
+Import and use in your code:
 
 ```swift
 import SystemMetrics
@@ -46,34 +66,31 @@ struct Application {
 }
 ```
 
-See the [`SystemMetrics` documentation](https://swiftpackageindex.com/apple/swift-system-metrics/documentation/systemmetrics) for details.
+## Collected metrics
 
-## Installation
+The monitor collects and reports the following metrics as gauges:
 
-Add Swift System Metrics as a dependency in your `Package.swift`:
+- **Virtual Memory**: Total virtual memory, in bytes, that the process allocates.
+  - Metric name: `process_virtual_memory_bytes`
+- **Resident Memory**: Physical memory, in bytes, that the process currently uses.
+  - Metric name: `process_resident_memory_bytes`
+- **Start Time**: Process start time, in seconds, since UNIX epoch. 
+  - Metric name: `process_start_time_seconds`
+- **CPU Time**: Cumulative CPU time the process consumes, in seconds. 
+  - Metric name: `process_cpu_seconds_total`
+- **Max File Descriptors**: The maximum number of file descriptors the process can open.
+  - Metric name: `process_max_fds`
+- **Open File Descriptors**: The number of file descriptors the process currently has open.
+  - Metric name: `process_open_fds`
 
-```swift
-dependencies: [
-  .package(url: "https://github.com/apple/swift-system-metrics.git", from: "1.0.0")
-]
-```
+## Supported platforms and minimum versions
 
-Then add `SystemMetrics` to your target:
+The library is supported on macOS and Linux.
 
-```swift
-.target(
-  name: "YourTarget",
-  dependencies: [
-    .product(name: "SystemMetrics", package: "swift-system-metrics")
-  ]
-)
-```
+| Component     | macOS  | Linux |
+| ------------- | -----  | ------|
+| SystemMetrics | ✅ 13+ | ✅ |
 
-## Example and Grafana dashboard
+## Documentation
 
-[Examples/ServiceIntegration](Examples/ServiceIntegration) provides a complete working example with a pre-built Grafana dashboard. The example includes:
-
-- `SwiftServiceLifecycle` integration.
-- `SwiftMetrics` configured to export the metrics.
-- Docker Compose setup with Grafana container.
-- A provisioned Grafana dashboard visualizing all the collected metrics.
+Comprehensive documentation is hosted on the [Swift Package Index](https://swiftpackageindex.com/apple/swift-system-metrics/documentation/systemmetrics).

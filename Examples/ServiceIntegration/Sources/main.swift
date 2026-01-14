@@ -1,12 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Metrics API open source project
+// This source file is part of the Swift System Metrics API open source project
 //
-// Copyright (c) 2025 Apple Inc. and the Swift Metrics API project authors
+// Copyright (c) 2025 Apple Inc. and the Swift System Metrics API project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.txt for the list of Swift Metrics API project authors
+// See CONTRIBUTORS.txt for the list of Swift System Metrics API project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //

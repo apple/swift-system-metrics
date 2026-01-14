@@ -1,12 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-// This source file is part of the Swift Metrics API open source project
+// This source file is part of the Swift System Metrics API open source project
 //
-// Copyright (c) 2025 Apple Inc. and the Swift Metrics API project authors
+// Copyright (c) 2025 Apple Inc. and the Swift System Metrics API project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
-// See CONTRIBUTORS.txt for the list of Swift Metrics API project authors
+// See CONTRIBUTORS.txt for the list of Swift System Metrics API project authors
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -150,11 +150,11 @@ public struct SystemMetricsMonitor: Service {
 
     /// Create a new monitor for system metrics using the global metrics factory.
     ///
-    /// If you can't, or don't want to use the process global metrics that the Metrics API provides,
-    /// consider using ``init(configuration:metricsFactory:logger:)`` instead.
+    /// If you don't use the process global metrics that the Metrics API provides,
+    /// use ``init(configuration:metricsFactory:logger:)`` instead.
     /// For example, if you have different backends for different metrics,
     /// use a [metrics factory](https://swiftpackageindex.com/apple/swift-metrics/documentation/coremetrics/metricsfactory)
-    /// from the backend where you want to send system metrics.
+    /// from the backend where you send system metrics.
     ///
     /// - Parameters:
     ///   - configuration: The configuration for the monitor.

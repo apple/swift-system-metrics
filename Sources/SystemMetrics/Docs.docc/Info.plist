@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CDDefaultCodeListingLanguage</key>
+	<string>swift</string>
+	<key>CFBundleName</key>
+	<string>SystemMetrics</string>
+	<key>CFBundleDisplayName</key>
+	<string>Swift System Metrics</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.apple.swift-system-metrics</string>
+	<key>CFBundlePackageType</key>
+	<string>DOCS</string>
+	<key>CDDefaultModuleKind</key>
+	<string>Library</string>
+</dict>
+</plist>

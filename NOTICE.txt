@@ -1,14 +1,14 @@
 
-                            The SwiftMetrics Project
+                            The Swift System Metrics Project
                             ========================
 
-Please visit the SwiftMetrics web site for more information:
+Please visit the Swift System Metrics web site for more information:
 
   * https://github.com/apple/swift-metrics
 
-Copyright 2018, 2019 The SwiftMetrics Project
+Copyright 2018-2026 The Swift System Metrics Project
 
-The SwiftMetrics Project licenses this file to you under the Apache License,
+The Swift System Metrics Project licenses this file to you under the Apache License,
 version 2.0 (the "License"); you may not use this file except in compliance
 with the License. You may obtain a copy of the License at:
 

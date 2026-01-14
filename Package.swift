@@ -1,30 +1,22 @@
 // swift-tools-version:6.0
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Swift Metrics API open source project
-//
-// Copyright (c) 2018-2019 Apple Inc. and the Swift Metrics API project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE.txt for license information
-// See CONTRIBUTORS.txt for the list of Swift Metrics API project authors
-//
-// SPDX-License-Identifier: Apache-2.0
-//
-//===----------------------------------------------------------------------===//
 
 import PackageDescription
 
 let package = Package(
     name: "swift-system-metrics",
-    platforms: [.macOS(.v13), .iOS(.v16), .watchOS(.v9), .tvOS(.v16)],
+    platforms: [
+        .macOS(.v13),
+        .iOS(.v16),
+        .watchOS(.v9),
+        .tvOS(.v16),
+    ],
     products: [
         .library(name: "SystemMetrics", targets: ["SystemMetrics"])
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-metrics.git", from: "2.3.2"),
-        .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.0.0"),
-        .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-metrics.git", from: "2.7.1"),
+        .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.9.1"),
+        .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.1.1"),
     ],
     targets: [
         .target(
