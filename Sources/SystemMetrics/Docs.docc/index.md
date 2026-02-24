@@ -71,7 +71,7 @@ The monitor collects the following metrics:
 - **Open File Descriptors**: The number of file descriptors the process currently has open.
   - Metric name: `process_open_fds`
 - **Thread Count**: The number of threads in the process.
-  - Metric name: `thread_count`
+  - Metric name: `process_thread_count`
 
 > Note: New metrics can be added in minor and patch versions.
 

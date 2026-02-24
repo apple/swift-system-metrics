@@ -146,7 +146,7 @@ struct DarwinDataProviderTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc",
+            threadCount: "tc"
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),

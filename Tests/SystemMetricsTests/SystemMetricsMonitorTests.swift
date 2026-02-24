@@ -104,7 +104,7 @@ struct SystemMetricsMonitorTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000,
+            threadCount: 7000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)

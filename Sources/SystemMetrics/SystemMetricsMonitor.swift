@@ -308,5 +308,35 @@ extension SystemMetricsMonitor {
             self.openFileDescriptors = openFileDescriptors
             self.threadCount = threadCount
         }
+
+        /// Create a new instance of metrics data.
+        ///
+        /// - Parameters:
+        ///     - virtualMemoryBytes: Virtual memory size in bytes
+        ///     - residentMemoryBytes: Resident memory size in bytes.
+        ///     - startTimeSeconds: Process start time since UNIX epoch in seconds.
+        ///     - cpuSeconds: Total user and system CPU time spent in seconds.
+        ///     - maxFileDescriptors: Maximum number of open file descriptors.
+        ///     - openFileDescriptors: Number of open file descriptors.
+        @available(*, deprecated)
+        @_disfavoredOverload
+        package init(
+            virtualMemoryBytes: Int,
+            residentMemoryBytes: Int,
+            startTimeSeconds: Int,
+            cpuSeconds: Double,
+            maxFileDescriptors: Int,
+            openFileDescriptors: Int
+        ) {
+            self.init(
+                virtualMemoryBytes: virtualMemoryBytes,
+                residentMemoryBytes: residentMemoryBytes,
+                startTimeSeconds: startTimeSeconds,
+                cpuSeconds: cpuSeconds,
+                maxFileDescriptors: maxFileDescriptors,
+                openFileDescriptors: openFileDescriptors,
+                threadCount: 0
+            )
+        }
     }
 }

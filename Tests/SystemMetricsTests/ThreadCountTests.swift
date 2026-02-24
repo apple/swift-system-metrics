@@ -12,35 +12,26 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Foundation
+// Neither detached threads nor joining guarantee immediate, deterministic
+// resource clean-up on macOS.
+#if canImport(Glibc) || canImport(Musl)
+
+import FoundationEssentials
 import SystemMetrics
 import XCTest
 
-// Thread tests are written as XCTest to benefit from its default process
-// isolation, as the number of threads in parallel execution of tests in shared
-// process is succeptible to thread count changes unrelated to the conditions
-// exercised in these tests.
+// Thread tests are written as XCTest to benefit from the standard serial
+// execution which translates as sufficient isolation for the actions and
+// verifications in the test to be consistent. The existing suites in Swift
+// Testing would share process and not be serial w.r.t. each other.
 final class ThreadCountTests: XCTestCase {
     func test_threadCount() throws {
         let threadCountBefore = try readMetric(\.threadCount)
-
-        #if os(macOS)
-        // On macOS, even after oining on a terminated or detached thread the
-        // resources have not yet been reaped deterministically by the OS, thus
-        // testing the only the increase in the gauge.
-        Thread.detachNewThread {}
-        XCTAssertEqual(try readMetric(\.threadCount), threadCountBefore + 1)
-
-        #elseif canImport(Glibc) || canImport(Musl)
-        // In Linux, with recent kernels, after joining on the thread
-        // thread resources are consistently found already released, so both
-        // the increase and decrease of the gauge are tested.
         var thread = pthread_t()
         _ = pthread_create(&thread, nil, { _ in nil }, nil)
         XCTAssertEqual(try readMetric(\.threadCount), threadCountBefore + 1)
-        pthread_join(thread, nil)
+        pthread_join(thread, nil)  // Thread resources are cleaned up.
         XCTAssertEqual(try readMetric(\.threadCount), threadCountBefore)
-        #endif
     }
 
     private func readMetric<Result>(
@@ -58,3 +49,5 @@ final class ThreadCountTests: XCTestCase {
         #endif
     }
 }
+
+#endif
