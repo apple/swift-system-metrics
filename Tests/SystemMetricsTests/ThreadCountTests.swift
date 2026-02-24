@@ -16,7 +16,12 @@
 // resource clean-up on macOS.
 #if canImport(Glibc) || canImport(Musl)
 
+#if canImport(FoundationEssentials)
 import FoundationEssentials
+#else
+import Foundation
+#endif
+
 import SystemMetrics
 import XCTest
 
