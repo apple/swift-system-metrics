@@ -45,7 +45,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         #expect(labels.label(for: \.virtualMemoryBytes) == "pfx+vmb")
@@ -54,6 +55,7 @@ struct SystemMetricsMonitorTests {
         #expect(labels.label(for: \.cpuSecondsTotal) == "pfx+cpt")
         #expect(labels.label(for: \.maxFileDescriptors) == "pfx+mfd")
         #expect(labels.label(for: \.openFileDescriptors) == "pfx+ofd")
+        #expect(labels.label(for: \.threadCount) == "pfx+tc")
     }
 
     @Test("Configuration preserves all provided settings")
@@ -65,7 +67,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
         let dimensions = [("app", "example"), ("environment", "production")]
         let configuration = SystemMetricsMonitor.Configuration(
@@ -82,6 +85,7 @@ struct SystemMetricsMonitorTests {
         #expect(configuration.labels.label(for: \.cpuSecondsTotal) == "pfx_cpt")
         #expect(configuration.labels.label(for: \.maxFileDescriptors) == "pfx_mfd")
         #expect(configuration.labels.label(for: \.openFileDescriptors) == "pfx_ofd")
+        #expect(configuration.labels.label(for: \.threadCount) == "pfx_tc")
 
         #expect(configuration.dimensions.contains(where: { $0 == ("app", "example") }))
         #expect(configuration.dimensions.contains(where: { $0 == ("environment", "production") }))
@@ -99,7 +103,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: 3000,
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
-            openFileDescriptors: 6000
+            openFileDescriptors: 6000,
+            threadCount: 7000,
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -112,7 +117,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -146,6 +152,9 @@ struct SystemMetricsMonitorTests {
 
         let ofdGauge = try testMetrics.expectGauge("test_ofd")
         #expect(ofdGauge.lastValue == 6000)
+
+        let tcGauge = try testMetrics.expectGauge("test_tc")
+        #expect(tcGauge.lastValue == 7000)
     }
 
     @Test("Monitor with nil provider does not report metrics")
@@ -161,7 +170,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -177,7 +187,7 @@ struct SystemMetricsMonitorTests {
         )
 
         // Recorders are created along with the Monitor
-        #expect(testMetrics.recorders.count == 6)
+        #expect(testMetrics.recorders.count == 7)
 
         await monitor.updateMetrics()
 
@@ -196,7 +206,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: 3000,
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
-            openFileDescriptors: 6000
+            openFileDescriptors: 6000,
+            threadCount: 7000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -209,7 +220,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let dimensions = [("service", "myapp"), ("environment", "production")]
@@ -260,7 +272,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: 3000,
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
-            openFileDescriptors: 6000
+            openFileDescriptors: 6000,
+            threadCount: 7000
         )
 
         let provider = CallCountingProvider(mockData: mockData)
@@ -273,7 +286,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -317,7 +331,8 @@ struct SystemMetricsMonitorTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -361,7 +376,8 @@ struct SystemMetricsInitializationTests {
             startTimeSeconds: 3000,
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
-            openFileDescriptors: 6000
+            openFileDescriptors: 6000,
+            threadCount: 7000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -373,7 +389,8 @@ struct SystemMetricsInitializationTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -407,7 +424,8 @@ struct SystemMetricsInitializationTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(

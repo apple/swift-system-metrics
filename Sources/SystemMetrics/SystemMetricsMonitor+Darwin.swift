@@ -48,6 +48,9 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         let virtualMemoryBytes = Int(taskInfo.ptinfo.pti_virtual_size)
         let residentMemoryBytes = Int(taskInfo.ptinfo.pti_resident_size)
 
+        // Threads
+        let threadCount = Int(taskInfo.ptinfo.pti_threadnum)
+
         // CPU time
         let userMachTicks = taskInfo.ptinfo.pti_total_user
         let systemMachTicks = taskInfo.ptinfo.pti_total_system
@@ -66,7 +69,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             startTimeSeconds: Int(taskInfo.pbsd.pbi_start_tvsec),
             cpuSeconds: cpuTimeSeconds,
             maxFileDescriptors: fileCounts.maximum,
-            openFileDescriptors: fileCounts.open
+            openFileDescriptors: fileCounts.open,
+            threadCount: threadCount
         )
     }
 

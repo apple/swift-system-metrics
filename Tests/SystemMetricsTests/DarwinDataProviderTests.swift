@@ -36,6 +36,7 @@ struct DarwinDataProviderTests {
         #expect(metrics.startTimeSeconds != 0)
         #expect(metrics.maxFileDescriptors != 0)
         #expect(metrics.openFileDescriptors != 0)
+        #expect(metrics.threadCount != 0)
     }
 
     @Test("Resident memory size reflects allocations")
@@ -144,7 +145,8 @@ struct DarwinDataProviderTests {
             startTimeSeconds: "sts",
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
-            openFileDescriptors: "ofd"
+            openFileDescriptors: "ofd",
+            threadCount: "tc",
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),
@@ -159,6 +161,7 @@ struct DarwinDataProviderTests {
         #expect(metrics.startTimeSeconds > 0)
         #expect(metrics.maxFileDescriptors > 0)
         #expect(metrics.openFileDescriptors > 0)
+        #expect(metrics.threadCount > 0)
     }
 
     // MARK: - Helpers

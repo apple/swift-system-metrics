@@ -194,6 +194,7 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             static let virtualMemoryBytes = 20
             static let residentMemoryBytes = 21
             static let startTimeTicks = 19
+            static let threadCount = 17
         }
 
         /// Use sysconf to get system configuration values that don't change
@@ -210,7 +211,7 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             statFile.close()
         }
 
-        // Read /proc/self/stat to get process memory and timing statistics
+        // Read /proc/self/stat to get process-related statistics
         let statFileContents = statFile.readFull()
 
         guard
@@ -225,7 +226,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         guard
             let virtualMemoryBytes = Int(stats[StatIndices.virtualMemoryBytes]),
             let rss = Int(stats[StatIndices.residentMemoryBytes]),
-            let startTimeTicks = Int(stats[StatIndices.startTimeTicks])
+            let startTimeTicks = Int(stats[StatIndices.startTimeTicks]),
+            let threadCount = Int(stats[StatIndices.threadCount])
         else { return nil }
 
         let residentMemoryBytes = rss * SystemConfiguration.pageByteCount
@@ -287,7 +289,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             startTimeSeconds: startTimeInSecondsSinceEpoch,
             cpuSeconds: cpuSecondsTotal,
             maxFileDescriptors: maxFileDescriptors,
-            openFileDescriptors: openFileDescriptors
+            openFileDescriptors: openFileDescriptors,
+            threadCount: threadCount
         )
     }
 }

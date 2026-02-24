@@ -57,6 +57,7 @@ public struct SystemMetricsMonitor: Service {
     let cpuSecondsTotalGauge: Gauge
     let maxFileDescriptorsGauge: Gauge
     let openFileDescriptorsGauge: Gauge
+    let threadCountGauge: Gauge
 
     /// Create a new monitor for system metrics.
     ///
@@ -105,6 +106,11 @@ public struct SystemMetricsMonitor: Service {
         )
         self.openFileDescriptorsGauge = Gauge(
             label: configuration.labels.label(for: \.openFileDescriptors),
+            dimensions: configuration.dimensions,
+            factory: effectiveMetricsFactory
+        )
+        self.threadCountGauge = Gauge(
+            label: configuration.labels.label(for: \.threadCount),
             dimensions: configuration.dimensions,
             factory: effectiveMetricsFactory
         )
@@ -201,6 +207,9 @@ public struct SystemMetricsMonitor: Service {
                 self.configuration.labels.openFileDescriptors.description: Logger.MetadataValue(
                     "\(metrics.openFileDescriptors)"
                 ),
+                self.configuration.labels.threadCount.description: Logger.MetadataValue(
+                    "\(metrics.threadCount)"
+                ),
             ]
         )
         self.virtualMemoryBytesGauge.record(metrics.virtualMemoryBytes)
@@ -209,6 +218,7 @@ public struct SystemMetricsMonitor: Service {
         self.cpuSecondsTotalGauge.record(metrics.cpuSeconds)
         self.maxFileDescriptorsGauge.record(metrics.maxFileDescriptors)
         self.openFileDescriptorsGauge.record(metrics.openFileDescriptors)
+        self.threadCountGauge.record(metrics.threadCount)
     }
 
     /// Start the monitoring loop, collecting and reporting metrics at the configured interval.
@@ -268,6 +278,8 @@ extension SystemMetricsMonitor {
         package var maxFileDescriptors: Int
         /// Number of open file descriptors.
         package var openFileDescriptors: Int
+        /// Number of threads in the process.
+        package var threadCount: Int
 
         /// Create a new instance of metrics data.
         ///
@@ -278,13 +290,15 @@ extension SystemMetricsMonitor {
         ///     - cpuSeconds: Total user and system CPU time spent in seconds.
         ///     - maxFileDescriptors: Maximum number of open file descriptors.
         ///     - openFileDescriptors: Number of open file descriptors.
+        ///     - threadCount: Number of threads in the process.
         package init(
             virtualMemoryBytes: Int,
             residentMemoryBytes: Int,
             startTimeSeconds: Int,
             cpuSeconds: Double,
             maxFileDescriptors: Int,
-            openFileDescriptors: Int
+            openFileDescriptors: Int,
+            threadCount: Int
         ) {
             self.virtualMemoryBytes = virtualMemoryBytes
             self.residentMemoryBytes = residentMemoryBytes
@@ -292,6 +306,7 @@ extension SystemMetricsMonitor {
             self.cpuSeconds = cpuSeconds
             self.maxFileDescriptors = maxFileDescriptors
             self.openFileDescriptors = openFileDescriptors
+            self.threadCount = threadCount
         }
     }
 }

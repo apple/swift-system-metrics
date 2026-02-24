@@ -62,14 +62,16 @@ The monitor collects the following metrics:
   - Metric name: `process_virtual_memory_bytes`
 - **Resident Memory**: Physical memory, in bytes, that the process currently uses.
   - Metric name: `process_resident_memory_bytes`
-- **Start Time**: Process start time, in seconds, since UNIX epoch. 
+- **Start Time**: Process start time, in seconds, since UNIX epoch.
   - Metric name: `process_start_time_seconds`
-- **CPU Time**: Cumulative CPU time the process consumes, in seconds. 
+- **CPU Time**: Cumulative CPU time the process consumes, in seconds.
   - Metric name: `process_cpu_seconds_total`
 - **Max File Descriptors**: The maximum number of file descriptors the process can open.
   - Metric name: `process_max_fds`
 - **Open File Descriptors**: The number of file descriptors the process currently has open.
   - Metric name: `process_open_fds`
+- **Thread Count**: The number of threads in the process.
+  - Metric name: `thread_count`
 
 > Note: New metrics can be added in minor and patch versions.
 

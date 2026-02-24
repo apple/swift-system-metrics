@@ -81,6 +81,8 @@ extension SystemMetricsMonitor.Configuration {
         package var maxFileDescriptors: String = "max_fds"
         /// Label for number of open file descriptors.
         package var openFileDescriptors: String = "open_fds"
+        /// Label for number of threads.
+        package var threadCount: String = "thread_count"
 
         /// Construct a label for a metric by concatenating the prefix with the corresponding label.
         ///
@@ -105,6 +107,7 @@ extension SystemMetricsMonitor.Configuration {
         ///     - cpuSecondsTotal: Label for total user and system CPU time spent in seconds.
         ///     - maxFileDescriptors: Label for maximum number of open file descriptors.
         ///     - openFileDescriptors: Label for number of open file descriptors.
+        ///     - threadCount: Label for number of threads.
         package init(
             prefix: String,
             virtualMemoryBytes: String,
@@ -112,7 +115,8 @@ extension SystemMetricsMonitor.Configuration {
             startTimeSeconds: String,
             cpuSecondsTotal: String,
             maxFileDescriptors: String,
-            openFileDescriptors: String
+            openFileDescriptors: String,
+            threadCount: String
         ) {
             self.prefix = prefix
             self.virtualMemoryBytes = virtualMemoryBytes
@@ -121,6 +125,7 @@ extension SystemMetricsMonitor.Configuration {
             self.cpuSecondsTotal = cpuSecondsTotal
             self.maxFileDescriptors = maxFileDescriptors
             self.openFileDescriptors = openFileDescriptors
+            self.threadCount = threadCount
         }
     }
 }
