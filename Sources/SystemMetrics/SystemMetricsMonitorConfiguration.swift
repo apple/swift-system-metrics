@@ -67,9 +67,6 @@ extension SystemMetricsMonitor.Configuration {
     /// Backend implementations can provide a static extension with
     /// defaults that suit their specific backend needs.
     package struct Labels: Sendable {
-        // Added post v 1.0, re-used in delegating init() and default.
-        private static let threadCountLiteral = "thread_count"
-
         /// Prefix for all other labels.
         package var prefix: String = "process_"
         /// Label for virtual memory size in bytes.
@@ -85,7 +82,7 @@ extension SystemMetricsMonitor.Configuration {
         /// Label for number of open file descriptors.
         package var openFileDescriptors: String = "open_fds"
         /// Label for number of threads.
-        package var threadCount: String = threadCountLiteral
+        package var threadCount: String = "thread_count"
 
         /// Construct a label for a metric by concatenating the prefix with the corresponding label.
         ///
@@ -129,39 +126,6 @@ extension SystemMetricsMonitor.Configuration {
             self.maxFileDescriptors = maxFileDescriptors
             self.openFileDescriptors = openFileDescriptors
             self.threadCount = threadCount
-        }
-
-        /// Create a new `Labels` instance.
-        ///
-        /// - Parameters:
-        ///     - prefix: Prefix for all other labels.
-        ///     - virtualMemoryBytes: Label for virtual memory size in bytes
-        ///     - residentMemoryBytes: Label for resident memory size in bytes.
-        ///     - startTimeSeconds: Label for process start time since UNIX epoch in seconds.
-        ///     - cpuSecondsTotal: Label for total user and system CPU time spent in seconds.
-        ///     - maxFileDescriptors: Label for maximum number of open file descriptors.
-        ///     - openFileDescriptors: Label for number of open file descriptors.
-        @available(*, deprecated)
-        @_disfavoredOverload
-        package init(
-            prefix: String,
-            virtualMemoryBytes: String,
-            residentMemoryBytes: String,
-            startTimeSeconds: String,
-            cpuSecondsTotal: String,
-            maxFileDescriptors: String,
-            openFileDescriptors: String
-        ) {
-            self.init(
-                prefix: prefix,
-                virtualMemoryBytes: virtualMemoryBytes,
-                residentMemoryBytes: residentMemoryBytes,
-                startTimeSeconds: startTimeSeconds,
-                cpuSecondsTotal: cpuSecondsTotal,
-                maxFileDescriptors: maxFileDescriptors,
-                openFileDescriptors: openFileDescriptors,
-                threadCount: Labels.threadCountLiteral
-            )
         }
     }
 }
