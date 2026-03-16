@@ -31,6 +31,7 @@ struct LinuxDataProviderTests {
         #expect(metrics.startTimeSeconds != 0)
         #expect(metrics.maxFileDescriptors != 0)
         #expect(metrics.openFileDescriptors != 0)
+        #expect(metrics.threadCount != 0)
     }
 
     @Test("Resident memory bytes reflects actual allocations")
