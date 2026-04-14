@@ -85,6 +85,13 @@ The monitor collects and reports the following metrics as gauges:
 - **Thread Count**: The number of threads in the process.
   - Metric name: `process_thread_count`
 
+## Renaming metric labels
+
+If your metrics backend expects different label names, use `MappingMetricsFactory` from Swift Metrics to rename labels
+without modifying the library itself. See the
+[Getting Started](https://swiftpackageindex.com/apple/swift-system-metrics/documentation/systemmetrics/gettingstarted)
+guide for a complete example.
+
 ## Supported platforms and minimum versions
 
 The library is supported on macOS and Linux.

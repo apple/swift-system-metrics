@@ -14,7 +14,7 @@ let package = Package(
         .library(name: "SystemMetrics", targets: ["SystemMetrics"])
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-metrics.git", from: "2.7.1"),
+        .package(url: "https://github.com/apple/swift-metrics.git", from: "2.10.0"),
         .package(url: "https://github.com/swift-server/swift-service-lifecycle.git", from: "2.9.1"),
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.1.1"),
     ],

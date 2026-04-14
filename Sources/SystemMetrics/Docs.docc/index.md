@@ -75,6 +75,12 @@ The monitor collects the following metrics:
 
 > Note: New metrics can be added in minor and patch versions.
 
+### Rename metric labels
+
+If your metrics backend expects different label names, use
+[`MappingMetricsFactory`](https://swiftpackageindex.com/apple/swift-metrics/documentation/coremetrics/mappingmetricsfactory)
+from Swift Metrics to rename labels without modifying the library. See <doc:GettingStarted> for a complete example.
+
 ### Supported platforms and minimum versions
 
 The library is supported on macOS and Linux.

@@ -355,6 +355,76 @@ struct SystemMetricsMonitorTests {
         #expect(lastValue > 0)
         #endif
     }
+
+    @Test("MappingMetricsFactory renames all default labels")
+    func monitorWithMappingFactory() async throws {
+        let logger = Logger(label: "SystemMetricsMonitorTests")
+        let mockData = SystemMetricsMonitor.Data(
+            virtualMemoryBytes: 1000,
+            residentMemoryBytes: 2000,
+            startTimeSeconds: 3000,
+            cpuSeconds: 4000,
+            maxFileDescriptors: 5000,
+            openFileDescriptors: 6000,
+            threadCount: 7000
+        )
+
+        let provider = MockMetricsProvider(mockData: mockData)
+        let testMetrics = TestMetrics()
+
+        // Rename every label using a dictionary. This pins the exact
+        // default label names the library uses, so the test fails if
+        // any label is accidentally changed.
+        let labelMapping: [String: String] = [
+            "process_virtual_memory_bytes": "app_vm_bytes",
+            "process_resident_memory_bytes": "app_rm_bytes",
+            "process_start_time_seconds": "app_start_time",
+            "process_cpu_seconds_total": "app_cpu_total",
+            "process_max_fds": "app_max_fds",
+            "process_open_fds": "app_open_fds",
+            "process_thread_count": "app_threads",
+        ]
+
+        let mappingFactory = testMetrics.withLabelAndDimensionsMapping { label, dimensions in
+            guard let mapped = labelMapping[label] else {
+                preconditionFailure("Unexpected metric label: \(label)")
+            }
+            return (mapped, dimensions)
+        }
+
+        let monitor = SystemMetricsMonitor(
+            configuration: .init(pollInterval: .seconds(1)),
+            metricsFactory: mappingFactory,
+            dataProvider: provider,
+            logger: logger
+        )
+
+        await monitor.updateMetrics()
+
+        let vmGauge = try testMetrics.expectGauge("app_vm_bytes")
+        #expect(vmGauge.lastValue == 1000)
+
+        let rmbGauge = try testMetrics.expectGauge("app_rm_bytes")
+        #expect(rmbGauge.lastValue == 2000)
+
+        let stsGauge = try testMetrics.expectGauge("app_start_time")
+        #expect(stsGauge.lastValue == 3000)
+
+        let cpuGauge = try testMetrics.expectGauge("app_cpu_total")
+        #expect(cpuGauge.lastValue == 4000)
+
+        let mfdGauge = try testMetrics.expectGauge("app_max_fds")
+        #expect(mfdGauge.lastValue == 5000)
+
+        let ofdGauge = try testMetrics.expectGauge("app_open_fds")
+        #expect(ofdGauge.lastValue == 6000)
+
+        let tcGauge = try testMetrics.expectGauge("app_threads")
+        #expect(tcGauge.lastValue == 7000)
+
+        // Verify that exactly 7 gauges were created — no more, no fewer.
+        #expect(testMetrics.recorders.count == 7)
+    }
 }
 
 @Suite("SystemMetrics with MetricsSystem Initialization Tests", .serialized)

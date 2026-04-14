@@ -73,3 +73,37 @@ struct Application {
     }
 }
 ```
+
+### Rename metric labels
+
+If your metrics backend expects different label names, use `MappingMetricsFactory` from Swift Metrics to rename labels
+without modifying the library:
+
+```swift
+import CoreMetrics
+
+let myBackend = MyMetricsBackendImplementation()
+MetricsSystem.bootstrap(myBackend)
+
+let labelMapping: [String: String] = [
+    "process_virtual_memory_bytes": "my_app_vm_bytes",
+    "process_resident_memory_bytes": "my_app_rm_bytes",
+    "process_start_time_seconds": "my_app_start_time",
+    "process_cpu_seconds_total": "my_app_cpu_total",
+    "process_max_fds": "my_app_max_fds",
+    "process_open_fds": "my_app_open_fds",
+    "process_thread_count": "my_app_threads",
+]
+
+let mappingFactory = MetricsSystem.factory.withLabelAndDimensionsMapping { label, dimensions in
+    (labelMapping[label] ?? label, dimensions)
+}
+
+let systemMetricsMonitor = SystemMetricsMonitor(
+    metricsFactory: mappingFactory,
+    logger: logger
+)
+```
+
+The transform receives every label and its dimensions before the metric is created. Labels not in the dictionary are
+passed through unchanged.
