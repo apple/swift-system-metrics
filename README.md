@@ -82,6 +82,8 @@ The monitor collects and reports the following metrics as gauges:
   - Metric name: `process_max_fds`
 - **Open File Descriptors**: The number of file descriptors the process currently has open.
   - Metric name: `process_open_fds`
+- **Thread Count**: The number of threads in the process.
+  - Metric name: `process_thread_count`
 
 ## Supported platforms and minimum versions
 
