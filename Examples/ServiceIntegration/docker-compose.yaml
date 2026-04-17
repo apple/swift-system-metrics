@@ -5,7 +5,6 @@ services:
       context: ../..
       dockerfile: Examples/ServiceIntegration/Dockerfile
     environment:
-      LOG_LEVEL: debug
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana:4317
     ports:
