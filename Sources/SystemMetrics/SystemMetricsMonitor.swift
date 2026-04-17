@@ -41,7 +41,7 @@ public struct SystemMetricsMonitor: Service {
     /// Configuration for the system metrics monitor.
     let configuration: SystemMetricsMonitor.Configuration
 
-    /// Optional metrics factory for testing. If nil, uses `MetricsSystem.factory`.
+    /// Optional metrics factory for testing. If nil, uses `MetricsSystem.currentFactory`.
     let metricsFactory: (any MetricsFactory)?
 
     /// The provider responsible for collecting system metrics data.
@@ -78,7 +78,7 @@ public struct SystemMetricsMonitor: Service {
         self.logger = logger
 
         // Initialize gauges once to avoid repeated creation in updateMetrics()
-        let effectiveMetricsFactory = metricsFactory ?? MetricsSystem.factory
+        let effectiveMetricsFactory = metricsFactory ?? MetricsSystem.currentFactory
         self.virtualMemoryBytesGauge = Gauge(
             label: configuration.labels.label(for: \.virtualMemoryBytes),
             dimensions: configuration.dimensions,

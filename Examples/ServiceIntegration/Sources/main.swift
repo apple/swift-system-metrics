@@ -13,6 +13,7 @@
 //===----------------------------------------------------------------------===//
 
 import AsyncAlgorithms
+import Instrumentation
 import Logging
 import Metrics
 import MetricsTestKit
@@ -40,26 +41,61 @@ struct FooService: Service {
     }
 }
 
-@main
-struct Application {
-    static func main() async throws {
-        let logger = Logger(label: "Application")
+func makeTelemetryService(logger: Logger, serviceName: String) throws -> ServiceGroup {
+    var otelConfig = OTel.Configuration.default
+    otelConfig.logs.enabled = false
+    otelConfig.metrics.enabled = true
+    otelConfig.traces.enabled = false
+    otelConfig.serviceName = serviceName
+    let otelMetricsBackend = try OTel.makeMetricsBackend(configuration: otelConfig)
 
-        // Bootstrap with some custom metrics backend
-        var otelConfig = OTel.Configuration.default
-        otelConfig.logs.enabled = false
-        otelConfig.serviceName = "ServiceIntegrationExample"
-        let otelService = try OTel.bootstrap(configuration: otelConfig)
-
-        // Create a service simulating some important work
-        let service = FooService(logger: logger)
-        let systemMetricsMonitor = SystemMetricsMonitor(
+    // Configure SystemMetrics monitoring
+    //
+    // Note: there is no MetricsFactory available beyond this point, all Metric objects
+    //       should've been created here during telemetry setup
+    let systemMetricsMonitor = withMetricsFactory(otelMetricsBackend.factory) {
+        SystemMetricsMonitor(
             configuration: .init(pollInterval: .seconds(30)),
             logger: logger
         )
+    }
+
+    // Create a named service group
+    let serviceGroup = ServiceGroup(
+        services: [
+            otelMetricsBackend.service,
+            systemMetricsMonitor,
+        ],
+        logger: logger,
+    )
+    let namedServiceConfiguration = ServiceGroupConfiguration.ServiceConfiguration(
+        service: serviceGroup,
+        serviceName: "Telemetry"
+    )
+    let serviceGroupConfiguration = ServiceGroupConfiguration(
+        services: [namedServiceConfiguration],
+        logger: logger
+    )
+    return ServiceGroup(configuration: serviceGroupConfiguration)
+}
+
+@main
+struct Application {
+    static func main() async throws {
+        let applicationName = "ServiceIntegrationExample"
+        let logger = Logger(label: applicationName)
+
+        // Initialize all telemetry services
+        let telemetryService = try makeTelemetryService(logger: logger, serviceName: applicationName)
+
+        // Create a service simulating some important work
+        let service = FooService(logger: logger)
 
         let serviceGroup = ServiceGroup(
-            services: [service, systemMetricsMonitor, otelService],
+            services: [
+                telemetryService,
+                service,
+            ],
             gracefulShutdownSignals: [.sigint],
             cancellationSignals: [.sigterm],
             logger: logger

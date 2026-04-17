@@ -95,7 +95,7 @@ let labelMapping: [String: String] = [
     "process_thread_count": "my_app_threads",
 ]
 
-let mappingFactory = MetricsSystem.factory.withLabelAndDimensionsMapping { label, dimensions in
+let mappingFactory = MetricsSystem.currentFactory.withLabelAndDimensionsMapping { label, dimensions in
     (labelMapping[label] ?? label, dimensions)
 }
 
