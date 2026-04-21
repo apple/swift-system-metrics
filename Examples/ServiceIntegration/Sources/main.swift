@@ -40,7 +40,10 @@ struct FooService: Service {
     }
 }
 
-func makeTelemetryService(logger: Logger, serviceName: String) throws -> ServiceGroup {
+func makeTelemetryService(
+    logger: Logger,
+    serviceName: String
+) throws -> (service: ServiceGroup, metricsFactory: any MetricsFactory) {
     var otelConfig = OTel.Configuration.default
     otelConfig.logs.enabled = false
     otelConfig.metrics.enabled = true
@@ -48,16 +51,12 @@ func makeTelemetryService(logger: Logger, serviceName: String) throws -> Service
     otelConfig.serviceName = serviceName
     let otelMetricsBackend = try OTel.makeMetricsBackend(configuration: otelConfig)
 
-    // Configure SystemMetrics monitoring
-    //
-    // Note: there is no MetricsFactory available beyond this point, all Metric objects
-    //       should've been created here during telemetry setup
-    let systemMetricsMonitor = withMetricsFactory(otelMetricsBackend.factory) {
-        SystemMetricsMonitor(
-            configuration: .init(pollInterval: .seconds(30)),
-            logger: logger
-        )
-    }
+    // Configure SystemMetrics monitoring with an explicit metrics factory
+    let systemMetricsMonitor = SystemMetricsMonitor(
+        configuration: .init(pollInterval: .seconds(30)),
+        metricsFactory: otelMetricsBackend.factory,
+        logger: logger
+    )
 
     // Create a named service group
     let serviceGroup = ServiceGroup(
@@ -75,7 +74,7 @@ func makeTelemetryService(logger: Logger, serviceName: String) throws -> Service
         services: [namedServiceConfiguration],
         logger: logger
     )
-    return ServiceGroup(configuration: serviceGroupConfiguration)
+    return (ServiceGroup(configuration: serviceGroupConfiguration), otelMetricsBackend.factory)
 }
 
 @main
@@ -85,7 +84,10 @@ struct Application {
         let logger = Logger(label: applicationName)
 
         // Initialize all telemetry services
-        let telemetryService = try makeTelemetryService(logger: logger, serviceName: applicationName)
+        let (telemetryService, metricsFactory) = try makeTelemetryService(
+            logger: logger,
+            serviceName: applicationName
+        )
 
         // Create a service simulating some important work
         let service = FooService(logger: logger)
@@ -100,6 +102,10 @@ struct Application {
             logger: logger
         )
 
-        try await serviceGroup.run()
+        // Use withMetricsFactory to make the OTel factory available as a task-local
+        // for any Metric objects created during the service group's run
+        try await withMetricsFactory(metricsFactory) {
+            try await serviceGroup.run()
+        }
     }
 }
