@@ -16,7 +16,6 @@ import AsyncAlgorithms
 import Instrumentation
 import Logging
 import Metrics
-import MetricsTestKit
 import OTel
 import ServiceLifecycle
 import SystemMetrics

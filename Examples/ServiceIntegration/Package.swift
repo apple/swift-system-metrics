@@ -22,8 +22,6 @@ let package = Package(
             name: "ServiceIntegrationExample",
             dependencies: [
                 .product(name: "SystemMetrics", package: "swift-system-metrics"),
-                .product(name: "Metrics", package: "swift-metrics"),
-                .product(name: "MetricsTestKit", package: "swift-metrics"),
                 .product(name: "ServiceLifecycle", package: "swift-service-lifecycle"),
                 .product(name: "UnixSignals", package: "swift-service-lifecycle"),
                 .product(name: "Logging", package: "swift-log"),
