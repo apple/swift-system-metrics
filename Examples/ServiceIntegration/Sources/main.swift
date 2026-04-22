@@ -33,7 +33,7 @@ struct FooService: Service {
             for i in 0...1000 {
                 let k = i * j
                 self.logger.trace("FooService is still running", metadata: ["k": "\(k)"])
-                await Task.yield()
+                try await Task.sleep(for: .milliseconds(100))
             }
         }
         self.logger.notice("FooService done")
