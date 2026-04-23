@@ -45,3 +45,5 @@ The dashboard provides four visualizations that map to the metrics collected by 
 1. Resident Memory (`process_resident_memory_bytes`) and Virtual Memory (`process_virtual_memory_bytes`) consumption.
 
 1. Open File Descriptors (`process_open_fds`) and Max File Descriptors (`process_max_fds`)
+
+1. Thread Count (`process_thread_count`)
