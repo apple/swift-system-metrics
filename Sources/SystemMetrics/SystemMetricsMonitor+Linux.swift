@@ -281,7 +281,17 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             closedir(dir)
         }
         var openFileDescriptors = 0
-        while readdir(dir) != nil { openFileDescriptors += 1 }
+        while let entry = readdir(dir) {
+            // Skip the "." and ".." directory pseudo-entries;
+            // they are not file descriptors.
+            let isDot = withUnsafePointer(to: entry.pointee.d_name) {
+                $0.withMemoryRebound(to: CChar.self, capacity: 3) { name in
+                    name[0] == 0x2E /* "." */
+                        && (name[1] == 0 || (name[1] == 0x2E && name[2] == 0))
+                }
+            }
+            if !isDot { openFileDescriptors += 1 }
+        }
 
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,

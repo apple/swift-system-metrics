@@ -126,5 +126,22 @@ struct LinuxDataProviderTests {
         #expect(metrics.maxFileDescriptors > 0)
         #expect(metrics.openFileDescriptors > 0)
     }
+
+    @Test("File descriptor counts are accurate")
+    func openFileDescriptors() throws {
+        let metricsBefore = SystemMetricsMonitorDataProvider.linuxSystemMetrics()
+        let openBefore = try #require(metricsBefore?.openFileDescriptors)
+
+        let fd = open("/dev/null", O_RDONLY)
+        guard fd >= 0 else {
+            Issue.record("Failed to open /dev/null")
+            return
+        }
+        defer { close(fd) }
+
+        let metricsDuring = SystemMetricsMonitorDataProvider.linuxSystemMetrics()
+        let openDuring = try #require(metricsDuring?.openFileDescriptors)
+        #expect(openDuring == openBefore + 1)
+    }
 }
 #endif
