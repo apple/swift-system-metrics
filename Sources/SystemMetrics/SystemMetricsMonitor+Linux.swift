@@ -286,12 +286,16 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             // they are not file descriptors.
             let isDot = withUnsafePointer(to: entry.pointee.d_name) {
                 $0.withMemoryRebound(to: CChar.self, capacity: 3) { name in
-                    name[0] == 0x2E /* "." */
+                    // 0x2E is ASCII for "."
+                    name[0] == 0x2E
                         && (name[1] == 0 || (name[1] == 0x2E && name[2] == 0))
                 }
             }
             if !isDot { openFileDescriptors += 1 }
         }
+        // Subtract 1 to exclude the file descriptor opened by opendir()
+        // itself, which appears in /proc/self/fd during enumeration.
+        openFileDescriptors -= 1
 
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,
