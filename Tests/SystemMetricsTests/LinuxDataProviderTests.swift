@@ -19,7 +19,11 @@ import Glibc
 
 import SystemMetrics
 
-@Suite("Linux Data Provider Tests")
+// This suite is serialized, as the tests involve exercising and
+// measuring process metrics, so running them concurrently can
+// make measurements flaky.
+
+@Suite("Linux Data Provider Tests", .serialized)
 struct LinuxDataProviderTests {
     @Test("Linux system metrics generation provides all required metrics")
     func systemMetricsGeneration() async throws {
