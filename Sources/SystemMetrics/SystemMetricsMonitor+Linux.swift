@@ -293,17 +293,15 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             }
             if !isDot { openFileDescriptors += 1 }
         }
-        // Subtract 1 to exclude the file descriptor opened by opendir()
-        // itself, which appears in /proc/self/fd during enumeration.
-        openFileDescriptors -= 1
-
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,
             residentMemoryBytes: residentMemoryBytes,
             startTimeSeconds: startTimeInSecondsSinceEpoch,
             cpuSeconds: cpuSecondsTotal,
             maxFileDescriptors: maxFileDescriptors,
-            openFileDescriptors: openFileDescriptors,
+            // Subtract 1 to exclude the file descriptor opened by opendir()
+            // itself, which appears in /proc/self/fd during enumeration.
+            openFileDescriptors: max(openFileDescriptors - 1, 0),
             threadCount: threadCount
         )
     }
