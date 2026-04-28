@@ -11,7 +11,7 @@ A Swift library for reporting process-level system metrics (memory, CPU, file de
 - 💻 **Examples** are available in the [Examples](Examples/) directory.
 - 🚀 **Contributions** are welcome, please see [CONTRIBUTING.md](CONTRIBUTING.md).
 - 🪪 **License** is Apache 2.0, repeated in [LICENSE](LICENSE.txt).
-- 🔒 **Security** issues should be reported via the process in [SECURITY.md](SECURITY.md).
+- 🔒 **Security** issues should be reported via the [security process](https://github.com/apple/swift-log?tab=security-ov-file).
 
 ## Overview
 
