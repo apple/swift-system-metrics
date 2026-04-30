@@ -113,7 +113,8 @@ struct DarwinDataProviderTests {
             return
         }
 
-        let expectedStartTime = Double(proc.kp_proc.p_starttime.tv_sec)
+        let expectedStartTime =
+            Double(proc.kp_proc.p_starttime.tv_sec)
             + Double(proc.kp_proc.p_starttime.tv_usec) / 1_000_000.0
         let metricsStartTime = try readMetric(\.startTimeSeconds)
 
