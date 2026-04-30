@@ -66,7 +66,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,
             residentMemoryBytes: residentMemoryBytes,
-            startTimeSeconds: Int(taskInfo.pbsd.pbi_start_tvsec),
+            startTimeSeconds: Double(taskInfo.pbsd.pbi_start_tvsec)
+                + Double(taskInfo.pbsd.pbi_start_tvusec) / 1_000_000.0,
             cpuSeconds: cpuTimeSeconds,
             maxFileDescriptors: fileCounts.maximum,
             openFileDescriptors: fileCounts.open,
