@@ -231,7 +231,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         else { return nil }
 
         let residentMemoryBytes = rss * SystemConfiguration.pageByteCount
-        let processStartTimeInSeconds = startTimeTicks / SystemConfiguration.clockTicksPerSecond
+        let processStartTimeInSeconds =
+            Double(startTimeTicks) / Double(SystemConfiguration.clockTicksPerSecond)
 
         // Use getrusage(RUSAGE_SELF) system call to get CPU time consumption
         // This provides both user and system time spent by this process
@@ -255,7 +256,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         guard let systemStartTimeInSecondsSinceEpoch = Self.systemStartTimeInSecondsSinceEpoch else {
             return nil
         }
-        let startTimeInSecondsSinceEpoch = systemStartTimeInSecondsSinceEpoch + processStartTimeInSeconds
+        let startTimeInSecondsSinceEpoch =
+            Double(systemStartTimeInSecondsSinceEpoch) + processStartTimeInSeconds
 
         // Use getrlimit(RLIMIT_NOFILE) system call to get file descriptor limits
         var _rlim = rlimit()

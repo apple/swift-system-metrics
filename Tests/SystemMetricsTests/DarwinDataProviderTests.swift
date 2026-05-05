@@ -113,11 +113,14 @@ struct DarwinDataProviderTests {
             return
         }
 
-        let expectedStartTime = proc.kp_proc.p_starttime.tv_sec
+        let expectedStartTime =
+            Double(proc.kp_proc.p_starttime.tv_sec)
+            + Double(proc.kp_proc.p_starttime.tv_usec) / 1_000_000.0
         let metricsStartTime = try readMetric(\.startTimeSeconds)
 
-        // We're ignoring sub-second precision in the test-generated
-        // timestamp, so allow for the metrics data to round up or down.
+        // Allow up to 1 second of drift between the sysctl measurement
+        // and the metrics snapshot, since both calls happen at slightly
+        // different wall-clock times.
         #expect(abs(metricsStartTime - expectedStartTime) <= 1)
     }
 
