@@ -139,6 +139,19 @@ struct DarwinDataProviderTests {
         #expect(openDuring == openBefore + 1)
     }
 
+    @Test("Max file descriptors reports the soft limit")
+    func maxFileDescriptorsReportsSoftLimit() throws {
+        var limits = rlimit()
+        let result = getrlimit(RLIMIT_NOFILE, &limits)
+        guard result == 0 else {
+            Issue.record("getrlimit failed")
+            return
+        }
+
+        let maxFDs = try readMetric(\.maxFileDescriptors)
+        #expect(maxFDs == Int(limits.rlim_cur))
+    }
+
     @Test("Data provider returns valid metrics via protocol")
     func dataProviderProtocol() async throws {
         let labels = SystemMetricsMonitor.Configuration.Labels(

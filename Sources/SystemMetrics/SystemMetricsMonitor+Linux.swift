@@ -274,7 +274,7 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             )
         else { return nil }
 
-        let maxFileDescriptors = Int(_rlim.rlim_max)
+        let maxFileDescriptors = Int(_rlim.rlim_cur)
 
         // Count open file descriptors by enumerating /proc/self/fd directory
         // Each entry represents an open file descriptor for this process

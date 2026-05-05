@@ -147,5 +147,18 @@ struct LinuxDataProviderTests {
         let openDuring = try #require(metricsDuring?.openFileDescriptors)
         #expect(openDuring == openBefore + 1)
     }
+
+    @Test("Max file descriptors reports the soft limit")
+    func maxFileDescriptorsReportsSoftLimit() throws {
+        var limits = rlimit()
+        let result = getrlimit(__rlimit_resource_t(RLIMIT_NOFILE.rawValue), &limits)
+        guard result == 0 else {
+            Issue.record("getrlimit failed")
+            return
+        }
+
+        let metrics = try #require(SystemMetricsMonitorDataProvider.linuxSystemMetrics())
+        #expect(metrics.maxFileDescriptors == Int(limits.rlim_cur))
+    }
 }
 #endif
