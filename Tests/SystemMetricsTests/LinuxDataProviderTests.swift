@@ -27,9 +27,7 @@ import SystemMetrics
 struct LinuxDataProviderTests {
     @Test("Linux system metrics generation provides all required metrics")
     func systemMetricsGeneration() async throws {
-        let _metrics = SystemMetricsMonitorDataProvider.linuxSystemMetrics()
-        #expect(_metrics != nil)
-        let metrics = _metrics!
+        let metrics = try #require(SystemMetricsMonitorDataProvider.linuxSystemMetrics())
         #expect(metrics.virtualMemoryBytes != 0)
         #expect(metrics.residentMemoryBytes != 0)
         #expect(metrics.startTimeSeconds != 0)
@@ -94,12 +92,11 @@ struct LinuxDataProviderTests {
             bytes.hash(into: &hasher)
         }
 
-        let metrics = SystemMetricsMonitorDataProvider.linuxSystemMetrics()
-        #expect(metrics != nil)
+        let metrics = try #require(SystemMetricsMonitorDataProvider.linuxSystemMetrics())
 
         // We can only set expectations for the lower limit for the CPU usage time,
         // other threads executing other tests can add more CPU usage
-        #expect(metrics!.cpuSeconds > 0)
+        #expect(metrics.cpuSeconds > 0)
     }
 
     @Test("Data provider returns valid metrics via protocol")
@@ -121,9 +118,7 @@ struct LinuxDataProviderTests {
 
         let provider = SystemMetricsMonitorDataProvider(configuration: configuration)
         let data = await provider.data()
-
-        #expect(data != nil)
-        let metrics = data!
+        let metrics = try #require(data)
         #expect(metrics.virtualMemoryBytes > 0)
         #expect(metrics.residentMemoryBytes > 0)
         #expect(metrics.startTimeSeconds > 0)
