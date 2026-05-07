@@ -83,6 +83,10 @@ extension SystemMetricsMonitor.Configuration {
         package var openFileDescriptors: String = "open_fds"
         /// Label for number of threads.
         package var threadCount: String = "thread_count"
+        /// Label for minor page faults.
+        package var minorPageFaults: String = "page_faults_minor_total"
+        /// Label for major page faults.
+        package var majorPageFaults: String = "page_faults_major_total"
 
         /// Construct a label for a metric by concatenating the prefix with the corresponding label.
         ///
@@ -108,6 +112,8 @@ extension SystemMetricsMonitor.Configuration {
         ///     - maxFileDescriptors: Label for maximum number of open file descriptors.
         ///     - openFileDescriptors: Label for number of open file descriptors.
         ///     - threadCount: Label for number of threads.
+        ///     - minorPageFaults: Label for minor page faults.
+        ///     - majorPageFaults: Label for major page faults.
         package init(
             prefix: String,
             virtualMemoryBytes: String,
@@ -116,7 +122,9 @@ extension SystemMetricsMonitor.Configuration {
             cpuSecondsTotal: String,
             maxFileDescriptors: String,
             openFileDescriptors: String,
-            threadCount: String
+            threadCount: String,
+            minorPageFaults: String = "page_faults_minor_total",
+            majorPageFaults: String = "page_faults_major_total"
         ) {
             self.prefix = prefix
             self.virtualMemoryBytes = virtualMemoryBytes
@@ -126,6 +134,8 @@ extension SystemMetricsMonitor.Configuration {
             self.maxFileDescriptors = maxFileDescriptors
             self.openFileDescriptors = openFileDescriptors
             self.threadCount = threadCount
+            self.minorPageFaults = minorPageFaults
+            self.majorPageFaults = majorPageFaults
         }
     }
 }

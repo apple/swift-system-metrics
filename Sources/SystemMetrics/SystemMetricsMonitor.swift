@@ -58,6 +58,8 @@ public struct SystemMetricsMonitor: Service {
     let maxFileDescriptorsGauge: Gauge
     let openFileDescriptorsGauge: Gauge
     let threadCountGauge: Gauge
+    let minorPageFaultsGauge: Gauge
+    let majorPageFaultsGauge: Gauge
 
     /// Create a new monitor for system metrics.
     ///
@@ -111,6 +113,16 @@ public struct SystemMetricsMonitor: Service {
         )
         self.threadCountGauge = Gauge(
             label: configuration.labels.label(for: \.threadCount),
+            dimensions: configuration.dimensions,
+            factory: effectiveMetricsFactory
+        )
+        self.minorPageFaultsGauge = Gauge(
+            label: configuration.labels.label(for: \.minorPageFaults),
+            dimensions: configuration.dimensions,
+            factory: effectiveMetricsFactory
+        )
+        self.majorPageFaultsGauge = Gauge(
+            label: configuration.labels.label(for: \.majorPageFaults),
             dimensions: configuration.dimensions,
             factory: effectiveMetricsFactory
         )
@@ -210,6 +222,12 @@ public struct SystemMetricsMonitor: Service {
                 self.configuration.labels.threadCount.description: Logger.MetadataValue(
                     "\(metrics.threadCount)"
                 ),
+                self.configuration.labels.minorPageFaults.description: Logger.MetadataValue(
+                    "\(metrics.minorPageFaults)"
+                ),
+                self.configuration.labels.majorPageFaults.description: Logger.MetadataValue(
+                    "\(metrics.majorPageFaults)"
+                ),
             ]
         )
         self.virtualMemoryBytesGauge.record(metrics.virtualMemoryBytes)
@@ -219,6 +237,8 @@ public struct SystemMetricsMonitor: Service {
         self.maxFileDescriptorsGauge.record(metrics.maxFileDescriptors)
         self.openFileDescriptorsGauge.record(metrics.openFileDescriptors)
         self.threadCountGauge.record(metrics.threadCount)
+        self.minorPageFaultsGauge.record(metrics.minorPageFaults)
+        self.majorPageFaultsGauge.record(metrics.majorPageFaults)
     }
 
     /// Start the monitoring loop, collecting and reporting metrics at the configured interval.
@@ -280,6 +300,10 @@ extension SystemMetricsMonitor {
         package var openFileDescriptors: Int
         /// Number of threads in the process.
         package var threadCount: Int
+        /// Number of minor page faults (no disk I/O required).
+        package var minorPageFaults: Int
+        /// Number of major page faults (required disk I/O).
+        package var majorPageFaults: Int
 
         /// Create a new instance of metrics data.
         ///
@@ -291,6 +315,8 @@ extension SystemMetricsMonitor {
         ///     - maxFileDescriptors: Maximum number of open file descriptors.
         ///     - openFileDescriptors: Number of open file descriptors.
         ///     - threadCount: Number of threads in the process.
+        ///     - minorPageFaults: Number of minor page faults.
+        ///     - majorPageFaults: Number of major page faults.
         package init(
             virtualMemoryBytes: Int,
             residentMemoryBytes: Int,
@@ -298,7 +324,9 @@ extension SystemMetricsMonitor {
             cpuSeconds: Double,
             maxFileDescriptors: Int,
             openFileDescriptors: Int,
-            threadCount: Int
+            threadCount: Int,
+            minorPageFaults: Int,
+            majorPageFaults: Int
         ) {
             self.virtualMemoryBytes = virtualMemoryBytes
             self.residentMemoryBytes = residentMemoryBytes
@@ -307,6 +335,8 @@ extension SystemMetricsMonitor {
             self.maxFileDescriptors = maxFileDescriptors
             self.openFileDescriptors = openFileDescriptors
             self.threadCount = threadCount
+            self.minorPageFaults = minorPageFaults
+            self.majorPageFaults = majorPageFaults
         }
     }
 }

@@ -56,6 +56,8 @@ struct SystemMetricsMonitorTests {
         #expect(labels.label(for: \.maxFileDescriptors) == "pfx+mfd")
         #expect(labels.label(for: \.openFileDescriptors) == "pfx+ofd")
         #expect(labels.label(for: \.threadCount) == "pfx+tc")
+        #expect(labels.label(for: \.minorPageFaults) == "pfx+page_faults_minor_total")
+        #expect(labels.label(for: \.majorPageFaults) == "pfx+page_faults_major_total")
     }
 
     @Test("Configuration preserves all provided settings")
@@ -86,6 +88,8 @@ struct SystemMetricsMonitorTests {
         #expect(configuration.labels.label(for: \.maxFileDescriptors) == "pfx_mfd")
         #expect(configuration.labels.label(for: \.openFileDescriptors) == "pfx_ofd")
         #expect(configuration.labels.label(for: \.threadCount) == "pfx_tc")
+        #expect(configuration.labels.label(for: \.minorPageFaults) == "pfx_page_faults_minor_total")
+        #expect(configuration.labels.label(for: \.majorPageFaults) == "pfx_page_faults_major_total")
 
         #expect(configuration.dimensions.contains(where: { $0 == ("app", "example") }))
         #expect(configuration.dimensions.contains(where: { $0 == ("environment", "production") }))
@@ -104,7 +108,9 @@ struct SystemMetricsMonitorTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000
+            threadCount: 7000,
+            minorPageFaults: 8000,
+            majorPageFaults: 9000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -155,6 +161,12 @@ struct SystemMetricsMonitorTests {
 
         let tcGauge = try testMetrics.expectGauge("test_tc")
         #expect(tcGauge.lastValue == 7000)
+
+        let minPfGauge = try testMetrics.expectGauge("test_page_faults_minor_total")
+        #expect(minPfGauge.lastValue == 8000)
+
+        let majPfGauge = try testMetrics.expectGauge("test_page_faults_major_total")
+        #expect(majPfGauge.lastValue == 9000)
     }
 
     @Test("Monitor with nil provider does not report metrics")
@@ -187,7 +199,7 @@ struct SystemMetricsMonitorTests {
         )
 
         // Recorders are created along with the Monitor
-        #expect(testMetrics.recorders.count == 7)
+        #expect(testMetrics.recorders.count == 9)
 
         await monitor.updateMetrics()
 
@@ -207,7 +219,9 @@ struct SystemMetricsMonitorTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000
+            threadCount: 7000,
+            minorPageFaults: 8000,
+            majorPageFaults: 9000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -273,7 +287,9 @@ struct SystemMetricsMonitorTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000
+            threadCount: 7000,
+            minorPageFaults: 8000,
+            majorPageFaults: 9000
         )
 
         let provider = CallCountingProvider(mockData: mockData)
@@ -366,7 +382,9 @@ struct SystemMetricsMonitorTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000
+            threadCount: 7000,
+            minorPageFaults: 8000,
+            majorPageFaults: 9000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -383,6 +401,8 @@ struct SystemMetricsMonitorTests {
             "process_max_fds": "app_max_fds",
             "process_open_fds": "app_open_fds",
             "process_thread_count": "app_threads",
+            "process_page_faults_minor_total": "app_minor_pf",
+            "process_page_faults_major_total": "app_major_pf",
         ]
 
         let mappingFactory = testMetrics.withLabelAndDimensionsMapping { label, dimensions in
@@ -422,8 +442,14 @@ struct SystemMetricsMonitorTests {
         let tcGauge = try testMetrics.expectGauge("app_threads")
         #expect(tcGauge.lastValue == 7000)
 
-        // Verify that exactly 7 gauges were created — no more, no fewer.
-        #expect(testMetrics.recorders.count == 7)
+        let minPfGauge = try testMetrics.expectGauge("app_minor_pf")
+        #expect(minPfGauge.lastValue == 8000)
+
+        let majPfGauge = try testMetrics.expectGauge("app_major_pf")
+        #expect(majPfGauge.lastValue == 9000)
+
+        // Verify that exactly 9 gauges were created — no more, no fewer.
+        #expect(testMetrics.recorders.count == 9)
     }
 }
 
@@ -447,7 +473,9 @@ struct SystemMetricsInitializationTests {
             cpuSeconds: 4000,
             maxFileDescriptors: 5000,
             openFileDescriptors: 6000,
-            threadCount: 7000
+            threadCount: 7000,
+            minorPageFaults: 8000,
+            majorPageFaults: 9000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)

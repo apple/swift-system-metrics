@@ -84,6 +84,10 @@ The monitor collects and reports the following metrics as gauges:
   - Metric name: `process_open_fds`
 - **Thread Count**: The number of threads in the process.
   - Metric name: `process_thread_count`
+- **Minor Page Faults**: The number of minor page faults (no disk I/O required).
+  - Metric name: `process_page_faults_minor_total`
+- **Major Page Faults**: The number of major page faults (required disk I/O).
+  - Metric name: `process_page_faults_major_total`
 
 ## Renaming metric labels
 

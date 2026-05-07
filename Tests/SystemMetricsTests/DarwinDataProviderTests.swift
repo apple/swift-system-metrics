@@ -37,6 +37,8 @@ struct DarwinDataProviderTests {
         #expect(metrics.maxFileDescriptors != 0)
         #expect(metrics.openFileDescriptors != 0)
         #expect(metrics.threadCount != 0)
+        #expect(metrics.minorPageFaults >= 0)
+        #expect(metrics.majorPageFaults >= 0)
     }
 
     @Test("Resident memory size reflects allocations")
@@ -152,6 +154,28 @@ struct DarwinDataProviderTests {
         #expect(maxFDs == Int(limits.rlim_cur))
     }
 
+    @Test("Page fault counts match getrusage cross-check")
+    func pageFaultsMatchAlternative() throws {
+        // Trigger some page faults by allocating and touching memory
+        let allocationSize = 1000 * pageSize
+        var address = try #require(vmAlloc(allocationSize))
+        memset(UnsafeMutableRawPointer(bitPattern: address), 0xB3, Int(allocationSize))
+        vmFree(&address, size: allocationSize)
+
+        let metrics = try readMetrics()
+
+        var usage = rusage()
+        getrusage(RUSAGE_SELF, &usage)
+
+        // The metrics snapshot and the getrusage call happen at slightly
+        // different times, so allow a small tolerance.
+        let minorDifference = abs(metrics.minorPageFaults - Int(usage.ru_minflt))
+        #expect(minorDifference <= 100)
+
+        let majorDifference = abs(metrics.majorPageFaults - Int(usage.ru_majflt))
+        #expect(majorDifference <= 10)
+    }
+
     @Test("Data provider returns valid metrics via protocol")
     func dataProviderProtocol() async throws {
         let labels = SystemMetricsMonitor.Configuration.Labels(
@@ -178,6 +202,8 @@ struct DarwinDataProviderTests {
         #expect(metrics.maxFileDescriptors > 0)
         #expect(metrics.openFileDescriptors > 0)
         #expect(metrics.threadCount > 0)
+        #expect(metrics.minorPageFaults >= 0)
+        #expect(metrics.majorPageFaults >= 0)
     }
 
     // MARK: - Helpers
