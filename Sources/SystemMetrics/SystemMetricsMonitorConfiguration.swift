@@ -123,8 +123,8 @@ extension SystemMetricsMonitor.Configuration {
             maxFileDescriptors: String,
             openFileDescriptors: String,
             threadCount: String,
-            minorPageFaults: String = "page_faults_minor_total",
-            majorPageFaults: String = "page_faults_major_total"
+            minorPageFaults: String,
+            majorPageFaults: String
         ) {
             self.prefix = prefix
             self.virtualMemoryBytes = virtualMemoryBytes
