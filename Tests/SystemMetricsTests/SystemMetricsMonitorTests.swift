@@ -46,7 +46,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         #expect(labels.label(for: \.virtualMemoryBytes) == "pfx+vmb")
@@ -56,8 +58,8 @@ struct SystemMetricsMonitorTests {
         #expect(labels.label(for: \.maxFileDescriptors) == "pfx+mfd")
         #expect(labels.label(for: \.openFileDescriptors) == "pfx+ofd")
         #expect(labels.label(for: \.threadCount) == "pfx+tc")
-        #expect(labels.label(for: \.minorPageFaults) == "pfx+page_faults_minor_total")
-        #expect(labels.label(for: \.majorPageFaults) == "pfx+page_faults_major_total")
+        #expect(labels.label(for: \.minorPageFaults) == "pfx+mpf")
+        #expect(labels.label(for: \.majorPageFaults) == "pfx+mjf")
     }
 
     @Test("Configuration preserves all provided settings")
@@ -70,7 +72,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
         let dimensions = [("app", "example"), ("environment", "production")]
         let configuration = SystemMetricsMonitor.Configuration(
@@ -124,7 +128,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -183,7 +189,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -235,7 +243,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let dimensions = [("service", "myapp"), ("environment", "production")]
@@ -303,7 +313,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -348,7 +360,9 @@ struct SystemMetricsMonitorTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -488,7 +502,9 @@ struct SystemMetricsInitializationTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -523,7 +539,9 @@ struct SystemMetricsInitializationTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(

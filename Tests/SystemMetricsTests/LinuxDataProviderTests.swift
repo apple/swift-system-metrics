@@ -114,7 +114,9 @@ struct LinuxDataProviderTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),
