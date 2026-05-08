@@ -93,6 +93,8 @@ let labelMapping: [String: String] = [
     "process_max_fds": "my_app_max_fds",
     "process_open_fds": "my_app_open_fds",
     "process_thread_count": "my_app_threads",
+    "process_page_faults_minor_total": "my_app_minor_page_faults",
+    "process_page_faults_major_total": "my_app_major_page_faults",
 ]
 
 let mappingFactory = MetricsSystem.factory.withLabelAndDimensionsMapping { label, dimensions in
