@@ -47,8 +47,8 @@ struct SystemMetricsMonitorTests {
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
             threadCount: "tc",
-            minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            minorPageFaults: "mpf",
+            majorPageFaults: "mjf"
         )
 
         #expect(labels.label(for: \.virtualMemoryBytes) == "pfx+vmb")
@@ -73,8 +73,8 @@ struct SystemMetricsMonitorTests {
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
             threadCount: "tc",
-            minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            minorPageFaults: "mpf",
+            majorPageFaults: "mjf"
         )
         let dimensions = [("app", "example"), ("environment", "production")]
         let configuration = SystemMetricsMonitor.Configuration(
