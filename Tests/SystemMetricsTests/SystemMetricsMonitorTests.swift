@@ -92,8 +92,8 @@ struct SystemMetricsMonitorTests {
         #expect(configuration.labels.label(for: \.maxFileDescriptors) == "pfx_mfd")
         #expect(configuration.labels.label(for: \.openFileDescriptors) == "pfx_ofd")
         #expect(configuration.labels.label(for: \.threadCount) == "pfx_tc")
-        #expect(configuration.labels.label(for: \.minorPageFaults) == "pfx_page_faults_minor_total")
-        #expect(configuration.labels.label(for: \.majorPageFaults) == "pfx_page_faults_major_total")
+        #expect(configuration.labels.label(for: \.minorPageFaults) == "pfx_mpf")
+        #expect(configuration.labels.label(for: \.majorPageFaults) == "pfx_mjf")
 
         #expect(configuration.dimensions.contains(where: { $0 == ("app", "example") }))
         #expect(configuration.dimensions.contains(where: { $0 == ("environment", "production") }))
