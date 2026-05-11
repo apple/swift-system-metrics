@@ -34,6 +34,8 @@ struct LinuxDataProviderTests {
         #expect(metrics.maxFileDescriptors != 0)
         #expect(metrics.openFileDescriptors != 0)
         #expect(metrics.threadCount != 0)
+        #expect(metrics.minorPageFaults >= 0)
+        #expect(metrics.majorPageFaults >= 0)
     }
 
     @Test("Resident memory bytes reflects actual allocations")
@@ -109,7 +111,9 @@ struct LinuxDataProviderTests {
             cpuSecondsTotal: "cpt",
             maxFileDescriptors: "mfd",
             openFileDescriptors: "ofd",
-            threadCount: "tc"
+            threadCount: "tc",
+            minorPageFaults: "page_faults_minor_total",
+            majorPageFaults: "page_faults_major_total"
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),
@@ -124,6 +128,8 @@ struct LinuxDataProviderTests {
         #expect(metrics.startTimeSeconds > 0)
         #expect(metrics.maxFileDescriptors > 0)
         #expect(metrics.openFileDescriptors > 0)
+        #expect(metrics.minorPageFaults >= 0)
+        #expect(metrics.majorPageFaults >= 0)
     }
 
     @Test("File descriptor counts are accurate")
@@ -154,6 +160,31 @@ struct LinuxDataProviderTests {
 
         let metrics = try #require(SystemMetricsMonitorDataProvider.linuxSystemMetrics())
         #expect(metrics.maxFileDescriptors == Int(limits.rlim_cur))
+    }
+
+    @Test("Page fault counts match getrusage cross-check")
+    func pageFaultsMatchAlternative() throws {
+        // Trigger some page faults by allocating and touching memory
+        let pageByteCount = sysconf(Int32(_SC_PAGESIZE))
+        let allocationSize = 1000 * pageByteCount
+        let bytes = UnsafeMutableRawBufferPointer.allocate(byteCount: allocationSize, alignment: 1)
+        defer { bytes.deallocate() }
+        bytes.initializeMemory(as: UInt8.self, repeating: 0xB3)
+
+        let metrics = try #require(SystemMetricsMonitorDataProvider.linuxSystemMetrics())
+
+        var usage = rusage()
+        withUnsafeMutablePointer(to: &usage) { ptr in
+            _ = getrusage(__rusage_who_t(RUSAGE_SELF.rawValue), ptr)
+        }
+
+        // The metrics snapshot and the getrusage call happen at slightly
+        // different times, so allow a small tolerance.
+        let minorDifference = abs(metrics.minorPageFaults - Int(usage.ru_minflt))
+        #expect(minorDifference <= 100)
+
+        let majorDifference = abs(metrics.majorPageFaults - Int(usage.ru_majflt))
+        #expect(majorDifference <= 10)
     }
 }
 #endif

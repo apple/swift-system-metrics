@@ -47,3 +47,5 @@ The dashboard provides four visualizations that map to the metrics collected by 
 1. Open File Descriptors (`process_open_fds`) and Max File Descriptors (`process_max_fds`)
 
 1. Thread Count (`process_thread_count`)
+
+1. Page Faults: Minor page faults rate (`process_page_faults_minor_total`) and Major page faults rate (`process_page_faults_major_total`)

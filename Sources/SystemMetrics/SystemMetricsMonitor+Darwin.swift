@@ -63,6 +63,12 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             return cpuTimeNanoseconds / Double(NSEC_PER_SEC)
         }()
 
+        // Page faults from getrusage(RUSAGE_SELF)
+        var usage = rusage()
+        guard getrusage(RUSAGE_SELF, &usage) == 0 else { return nil }
+        let minorPageFaults = Int(usage.ru_minflt)
+        let majorPageFaults = Int(usage.ru_majflt)
+
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,
             residentMemoryBytes: residentMemoryBytes,
@@ -71,7 +77,9 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             cpuSeconds: cpuTimeSeconds,
             maxFileDescriptors: fileCounts.maximum,
             openFileDescriptors: fileCounts.open,
-            threadCount: threadCount
+            threadCount: threadCount,
+            minorPageFaults: minorPageFaults,
+            majorPageFaults: majorPageFaults
         )
     }
 

@@ -137,7 +137,7 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
     /// - `sysconf(_SC_CLK_TCK)` - System clock ticks per second for time conversion
     /// - `sysconf(_SC_PAGESIZE)` - System page size for memory conversion
     /// - `/proc/self/stat` - Process memory usage and start time
-    /// - `getrusage(RUSAGE_SELF)` - CPU time
+    /// - `getrusage(RUSAGE_SELF)` - CPU time and page fault counts
     /// - `getrlimit(RLIMIT_NOFILE)` - Maximum file descriptors limit
     /// - `/proc/self/fd/` directory enumeration - Count of open file descriptors
     ///
@@ -252,6 +252,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         let cpuSecondsUser: Double = Double(_rusage.ru_utime.tv_sec) + Double(_rusage.ru_utime.tv_usec) / 1_000_000.0
         let cpuSecondsSystem: Double = Double(_rusage.ru_stime.tv_sec) + Double(_rusage.ru_stime.tv_usec) / 1_000_000.0
         let cpuSecondsTotal: Double = cpuSecondsUser + cpuSecondsSystem
+        let minorPageFaults = Int(_rusage.ru_minflt)
+        let majorPageFaults = Int(_rusage.ru_majflt)
 
         guard let systemStartTimeInSecondsSinceEpoch = Self.systemStartTimeInSecondsSinceEpoch else {
             return nil
@@ -304,7 +306,9 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             // Subtract 1 to exclude the file descriptor opened by opendir()
             // itself, which appears in /proc/self/fd during enumeration.
             openFileDescriptors: max(openFileDescriptors - 1, 0),
-            threadCount: threadCount
+            threadCount: threadCount,
+            minorPageFaults: minorPageFaults,
+            majorPageFaults: majorPageFaults
         )
     }
 }
