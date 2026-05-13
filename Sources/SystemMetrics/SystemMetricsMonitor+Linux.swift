@@ -81,14 +81,10 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
 
         func readFull() -> String {
             var s = ""
-            func loop() -> String {
-                if let l = readLine() {
-                    s += l
-                    return loop()
-                }
-                return s
+            while let l = readLine() {
+                s += l
             }
-            return loop()
+            return s
         }
     }
 
