@@ -250,6 +250,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         let cpuSecondsTotal: Double = cpuSecondsUser + cpuSecondsSystem
         let minorPageFaults = Int(_rusage.ru_minflt)
         let majorPageFaults = Int(_rusage.ru_majflt)
+        let blockInputOperations = Int(_rusage.ru_inblock)
+        let blockOutputOperations = Int(_rusage.ru_oublock)
 
         guard let systemStartTimeInSecondsSinceEpoch = Self.systemStartTimeInSecondsSinceEpoch else {
             return nil
@@ -304,7 +306,9 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             openFileDescriptors: max(openFileDescriptors - 1, 0),
             threadCount: threadCount,
             minorPageFaults: minorPageFaults,
-            majorPageFaults: majorPageFaults
+            majorPageFaults: majorPageFaults,
+            blockInputOperations: blockInputOperations,
+            blockOutputOperations: blockOutputOperations
         )
     }
 }

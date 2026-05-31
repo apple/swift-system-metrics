@@ -39,6 +39,8 @@ struct DarwinDataProviderTests {
         #expect(metrics.threadCount != 0)
         #expect(metrics.minorPageFaults >= 0)
         #expect(metrics.majorPageFaults >= 0)
+        #expect(metrics.blockInputOperations >= 0)
+        #expect(metrics.blockOutputOperations >= 0)
     }
 
     @Test("Resident memory size reflects allocations")
@@ -188,7 +190,9 @@ struct DarwinDataProviderTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),
@@ -206,6 +210,8 @@ struct DarwinDataProviderTests {
         #expect(metrics.threadCount > 0)
         #expect(metrics.minorPageFaults >= 0)
         #expect(metrics.majorPageFaults >= 0)
+        #expect(metrics.blockInputOperations >= 0)
+        #expect(metrics.blockOutputOperations >= 0)
     }
 
     // MARK: - Helpers

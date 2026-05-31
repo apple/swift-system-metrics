@@ -60,6 +60,8 @@ public struct SystemMetricsMonitor: Service {
     let threadCountGauge: Gauge
     let minorPageFaultsGauge: Gauge
     let majorPageFaultsGauge: Gauge
+    let blockInputOperationsGauge: Gauge
+    let blockOutputOperationsGauge: Gauge
 
     /// Create a new monitor for system metrics.
     ///
@@ -123,6 +125,16 @@ public struct SystemMetricsMonitor: Service {
         )
         self.majorPageFaultsGauge = Gauge(
             label: configuration.labels.label(for: \.majorPageFaults),
+            dimensions: configuration.dimensions,
+            factory: effectiveMetricsFactory
+        )
+        self.blockInputOperationsGauge = Gauge(
+            label: configuration.labels.label(for: \.blockInputOperations),
+            dimensions: configuration.dimensions,
+            factory: effectiveMetricsFactory
+        )
+        self.blockOutputOperationsGauge = Gauge(
+            label: configuration.labels.label(for: \.blockOutputOperations),
             dimensions: configuration.dimensions,
             factory: effectiveMetricsFactory
         )
@@ -228,6 +240,12 @@ public struct SystemMetricsMonitor: Service {
                 self.configuration.labels.majorPageFaults.description: Logger.MetadataValue(
                     "\(metrics.majorPageFaults)"
                 ),
+                self.configuration.labels.blockInputOperations.description: Logger.MetadataValue(
+                    "\(metrics.blockInputOperations)"
+                ),
+                self.configuration.labels.blockOutputOperations.description: Logger.MetadataValue(
+                    "\(metrics.blockOutputOperations)"
+                ),
             ]
         )
         self.virtualMemoryBytesGauge.record(metrics.virtualMemoryBytes)
@@ -239,6 +257,8 @@ public struct SystemMetricsMonitor: Service {
         self.threadCountGauge.record(metrics.threadCount)
         self.minorPageFaultsGauge.record(metrics.minorPageFaults)
         self.majorPageFaultsGauge.record(metrics.majorPageFaults)
+        self.blockInputOperationsGauge.record(metrics.blockInputOperations)
+        self.blockOutputOperationsGauge.record(metrics.blockOutputOperations)
     }
 
     /// Start the monitoring loop, collecting and reporting metrics at the configured interval.
@@ -304,6 +324,10 @@ extension SystemMetricsMonitor {
         package var minorPageFaults: Int
         /// Number of major page faults (required disk I/O).
         package var majorPageFaults: Int
+        /// Number of block input operations (disk reads).
+        package var blockInputOperations: Int
+        /// Number of block output operations (disk writes).
+        package var blockOutputOperations: Int
 
         /// Create a new instance of metrics data.
         ///
@@ -317,6 +341,8 @@ extension SystemMetricsMonitor {
         ///     - threadCount: Number of threads in the process.
         ///     - minorPageFaults: Number of minor page faults.
         ///     - majorPageFaults: Number of major page faults.
+        ///     - blockInputOperations: Number of block input operations.
+        ///     - blockOutputOperations: Number of block output operations.
         package init(
             virtualMemoryBytes: Int,
             residentMemoryBytes: Int,
@@ -326,7 +352,9 @@ extension SystemMetricsMonitor {
             openFileDescriptors: Int,
             threadCount: Int,
             minorPageFaults: Int,
-            majorPageFaults: Int
+            majorPageFaults: Int,
+            blockInputOperations: Int,
+            blockOutputOperations: Int
         ) {
             self.virtualMemoryBytes = virtualMemoryBytes
             self.residentMemoryBytes = residentMemoryBytes
@@ -337,6 +365,8 @@ extension SystemMetricsMonitor {
             self.threadCount = threadCount
             self.minorPageFaults = minorPageFaults
             self.majorPageFaults = majorPageFaults
+            self.blockInputOperations = blockInputOperations
+            self.blockOutputOperations = blockOutputOperations
         }
     }
 }

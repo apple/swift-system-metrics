@@ -88,6 +88,10 @@ The monitor collects and reports the following metrics as gauges:
   - Metric name: `process_page_faults_minor_total`
 - **Major Page Faults**: The number of major page faults (required disk I/O).
   - Metric name: `process_page_faults_major_total`
+- **Block Input Operations**: The number of block input operations (disk reads).
+  - Metric name: `process_block_input_operations_total`
+- **Block Output Operations**: The number of block output operations (disk writes).
+  - Metric name: `process_block_output_operations_total`
 
 ## Renaming metric labels
 

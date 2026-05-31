@@ -68,6 +68,8 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
         guard getrusage(RUSAGE_SELF, &usage) == 0 else { return nil }
         let minorPageFaults = Int(usage.ru_minflt)
         let majorPageFaults = Int(usage.ru_majflt)
+        let blockInputOperations = Int(usage.ru_inblock)
+        let blockOutputOperations = Int(usage.ru_oublock)
 
         return .init(
             virtualMemoryBytes: virtualMemoryBytes,
@@ -79,7 +81,9 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
             openFileDescriptors: fileCounts.open,
             threadCount: threadCount,
             minorPageFaults: minorPageFaults,
-            majorPageFaults: majorPageFaults
+            majorPageFaults: majorPageFaults,
+            blockInputOperations: blockInputOperations,
+            blockOutputOperations: blockOutputOperations
         )
     }
 

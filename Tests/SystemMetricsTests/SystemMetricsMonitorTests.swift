@@ -48,7 +48,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "mpf",
-            majorPageFaults: "mjf"
+            majorPageFaults: "mjf",
+            blockInputOperations: "bio",
+            blockOutputOperations: "boo"
         )
 
         #expect(labels.label(for: \.virtualMemoryBytes) == "pfx+vmb")
@@ -60,6 +62,8 @@ struct SystemMetricsMonitorTests {
         #expect(labels.label(for: \.threadCount) == "pfx+tc")
         #expect(labels.label(for: \.minorPageFaults) == "pfx+mpf")
         #expect(labels.label(for: \.majorPageFaults) == "pfx+mjf")
+        #expect(labels.label(for: \.blockInputOperations) == "pfx+bio")
+        #expect(labels.label(for: \.blockOutputOperations) == "pfx+boo")
     }
 
     @Test("Configuration preserves all provided settings")
@@ -74,7 +78,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "mpf",
-            majorPageFaults: "mjf"
+            majorPageFaults: "mjf",
+            blockInputOperations: "bio",
+            blockOutputOperations: "boo"
         )
         let dimensions = [("app", "example"), ("environment", "production")]
         let configuration = SystemMetricsMonitor.Configuration(
@@ -94,6 +100,8 @@ struct SystemMetricsMonitorTests {
         #expect(configuration.labels.label(for: \.threadCount) == "pfx_tc")
         #expect(configuration.labels.label(for: \.minorPageFaults) == "pfx_mpf")
         #expect(configuration.labels.label(for: \.majorPageFaults) == "pfx_mjf")
+        #expect(configuration.labels.label(for: \.blockInputOperations) == "pfx_bio")
+        #expect(configuration.labels.label(for: \.blockOutputOperations) == "pfx_boo")
 
         #expect(configuration.dimensions.contains(where: { $0 == ("app", "example") }))
         #expect(configuration.dimensions.contains(where: { $0 == ("environment", "production") }))
@@ -114,7 +122,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: 6000,
             threadCount: 7000,
             minorPageFaults: 8000,
-            majorPageFaults: 9000
+            majorPageFaults: 9000,
+            blockInputOperations: 10000,
+            blockOutputOperations: 11000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -130,7 +140,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -173,6 +185,12 @@ struct SystemMetricsMonitorTests {
 
         let majPfGauge = try testMetrics.expectGauge("test_page_faults_major_total")
         #expect(majPfGauge.lastValue == 9000)
+
+        let bioGauge = try testMetrics.expectGauge("test_block_input_ops")
+        #expect(bioGauge.lastValue == 10000)
+
+        let booGauge = try testMetrics.expectGauge("test_block_output_ops")
+        #expect(booGauge.lastValue == 11000)
     }
 
     @Test("Monitor with nil provider does not report metrics")
@@ -191,7 +209,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -207,7 +227,7 @@ struct SystemMetricsMonitorTests {
         )
 
         // Recorders are created along with the Monitor
-        #expect(testMetrics.recorders.count == 9)
+        #expect(testMetrics.recorders.count == 11)
 
         await monitor.updateMetrics()
 
@@ -229,7 +249,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: 6000,
             threadCount: 7000,
             minorPageFaults: 8000,
-            majorPageFaults: 9000
+            majorPageFaults: 9000,
+            blockInputOperations: 10000,
+            blockOutputOperations: 11000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -245,7 +267,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let dimensions = [("service", "myapp"), ("environment", "production")]
@@ -299,7 +323,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: 6000,
             threadCount: 7000,
             minorPageFaults: 8000,
-            majorPageFaults: 9000
+            majorPageFaults: 9000,
+            blockInputOperations: 10000,
+            blockOutputOperations: 11000
         )
 
         let provider = CallCountingProvider(mockData: mockData)
@@ -315,7 +341,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -362,7 +390,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -398,7 +428,9 @@ struct SystemMetricsMonitorTests {
             openFileDescriptors: 6000,
             threadCount: 7000,
             minorPageFaults: 8000,
-            majorPageFaults: 9000
+            majorPageFaults: 9000,
+            blockInputOperations: 10000,
+            blockOutputOperations: 11000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -417,6 +449,8 @@ struct SystemMetricsMonitorTests {
             "process_thread_count": "app_threads",
             "process_page_faults_minor_total": "app_minor_pf",
             "process_page_faults_major_total": "app_major_pf",
+            "process_block_input_operations_total": "app_block_in",
+            "process_block_output_operations_total": "app_block_out",
         ]
 
         let mappingFactory = testMetrics.withLabelAndDimensionsMapping { label, dimensions in
@@ -462,8 +496,14 @@ struct SystemMetricsMonitorTests {
         let majPfGauge = try testMetrics.expectGauge("app_major_pf")
         #expect(majPfGauge.lastValue == 9000)
 
-        // Verify that exactly 9 gauges were created — no more, no fewer.
-        #expect(testMetrics.recorders.count == 9)
+        let bioGauge = try testMetrics.expectGauge("app_block_in")
+        #expect(bioGauge.lastValue == 10000)
+
+        let booGauge = try testMetrics.expectGauge("app_block_out")
+        #expect(booGauge.lastValue == 11000)
+
+        // Verify that exactly 11 gauges were created — no more, no fewer.
+        #expect(testMetrics.recorders.count == 11)
     }
 }
 
@@ -489,7 +529,9 @@ struct SystemMetricsInitializationTests {
             openFileDescriptors: 6000,
             threadCount: 7000,
             minorPageFaults: 8000,
-            majorPageFaults: 9000
+            majorPageFaults: 9000,
+            blockInputOperations: 10000,
+            blockOutputOperations: 11000
         )
 
         let provider = MockMetricsProvider(mockData: mockData)
@@ -504,7 +546,9 @@ struct SystemMetricsInitializationTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(
@@ -541,7 +585,9 @@ struct SystemMetricsInitializationTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
 
         let configuration = SystemMetricsMonitor.Configuration(

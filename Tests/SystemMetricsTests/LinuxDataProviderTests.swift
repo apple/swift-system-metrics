@@ -36,6 +36,8 @@ struct LinuxDataProviderTests {
         #expect(metrics.threadCount != 0)
         #expect(metrics.minorPageFaults >= 0)
         #expect(metrics.majorPageFaults >= 0)
+        #expect(metrics.blockInputOperations >= 0)
+        #expect(metrics.blockOutputOperations >= 0)
     }
 
     @Test("Resident memory bytes reflects actual allocations")
@@ -113,7 +115,9 @@ struct LinuxDataProviderTests {
             openFileDescriptors: "ofd",
             threadCount: "tc",
             minorPageFaults: "page_faults_minor_total",
-            majorPageFaults: "page_faults_major_total"
+            majorPageFaults: "page_faults_major_total",
+            blockInputOperations: "block_input_ops",
+            blockOutputOperations: "block_output_ops"
         )
         let configuration = SystemMetricsMonitor.Configuration(
             pollInterval: .seconds(1),
@@ -130,6 +134,8 @@ struct LinuxDataProviderTests {
         #expect(metrics.openFileDescriptors > 0)
         #expect(metrics.minorPageFaults >= 0)
         #expect(metrics.majorPageFaults >= 0)
+        #expect(metrics.blockInputOperations >= 0)
+        #expect(metrics.blockOutputOperations >= 0)
     }
 
     @Test("File descriptor counts are accurate")
