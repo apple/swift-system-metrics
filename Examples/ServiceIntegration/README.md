@@ -49,3 +49,22 @@ The dashboard provides four visualizations that map to the metrics collected by 
 1. Thread Count (`process_thread_count`)
 
 1. Page Faults: Minor page faults rate (`process_page_faults_minor_total`) and Major page faults rate (`process_page_faults_major_total`)
+
+## Grafana Alert Example
+
+In addition to the dashboard, this example provisions a Grafana alert rule that
+fires when process CPU usage stays above 90% for 2 minutes.
+
+The rule evaluates:
+
+```promql
+rate(process_cpu_seconds_total[5m])
+```
+
+with a threshold of `0.9` (90%, matching the dashboard's `percentunit` CPU panel).
+
+After `docker-compose up --build`, open Grafana at http://localhost:3000 and go to
+**Alerting → Alert rules**. You should see **High CPU usage** under the
+**Service Process Metrics** folder. The rule definition lives in
+[`grafana/provisioning/alerting/high-cpu-usage.yaml`](grafana/provisioning/alerting/high-cpu-usage.yaml).
+
