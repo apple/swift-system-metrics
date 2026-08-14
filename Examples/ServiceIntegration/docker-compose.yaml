@@ -19,6 +19,7 @@ services:
     volumes:
       - ./grafana/provisioning/dashboards/service-process-metrics-dashboard.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/service-process-metrics-dashboard.yaml
       - ./grafana/provisioning/dashboards/grafana-dashboard-service-process-metrics.json:/otel-lgtm/grafana-dashboard-service-process-metrics.json
+      - ./grafana/provisioning/alerting/high-cpu-usage.yaml:/otel-lgtm/grafana/conf/provisioning/alerting/high-cpu-usage.yaml
     ports:
       - "3000:3000"
       - "4317:4317"
