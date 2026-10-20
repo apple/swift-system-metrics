@@ -31,6 +31,16 @@ jobs:
     with:
       runner_pool: general
       build_scheme: swift-system-metrics
+      debug_output_enabled: true
+      swift_6_1_enabled: false
+      swift_6_2_enabled: true
+      swift_6_3_enabled: true
+      swift_6_4_enabled: true
+      macos_xcode_test_enabled: true
+      ios_xcode_test_enabled: false
+      watchos_xcode_test_enabled: false
+      tvos_xcode_test_enabled: false
+      visionos_xcode_test_enabled: false
 
   static-sdk:
     name: Static SDK
