@@ -137,7 +137,14 @@ extension SystemMetricsMonitorDataProvider: SystemMetricsProvider {
                 var descriptorLimit = rlimit()
                 let result = getrlimit(RLIMIT_NOFILE, &descriptorLimit)
                 guard result == 0 else { return nil }
-                return Int(descriptorLimit.rlim_cur)
+                // The kernel never lets a process open more than `kern.maxfilesperproc`
+                // descriptors, even if the soft limit is higher (or `RLIM_INFINITY`).
+                var maxFilesPerProcess: Int32 = 0
+                var size = MemoryLayout<Int32>.size
+                guard sysctlbyname("kern.maxfilesperproc", &maxFilesPerProcess, &size, nil, 0) == 0,
+                    maxFilesPerProcess > 0
+                else { return Int(descriptorLimit.rlim_cur) }
+                return Int(min(descriptorLimit.rlim_cur, rlim_t(maxFilesPerProcess)))
             }()
 
             guard let open, let maximum else { return nil }
