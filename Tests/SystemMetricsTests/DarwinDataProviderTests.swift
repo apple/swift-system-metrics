@@ -150,8 +150,32 @@ struct DarwinDataProviderTests {
             return
         }
 
+        // The kernel caps the soft limit at `kern.maxfilesperproc`;
+        // `getdtablesize()` returns the resulting effective limit.
         let maxFDs = try readMetric(\.maxFileDescriptors)
-        #expect(maxFDs == Int(limits.rlim_cur))
+        #expect(maxFDs == min(Int(limits.rlim_cur), Int(getdtablesize())))
+    }
+
+    @Test(
+        "Max file descriptors is capped by kern.maxfilesperproc",
+        .enabled(if: Self.softLimitAboveMaxFilesPerProcess() != nil)
+    )
+    func maxFileDescriptorsCappedByMaxFilesPerProcess() throws {
+        var originalLimits = rlimit()
+        try #require(getrlimit(RLIMIT_NOFILE, &originalLimits) == 0)
+        defer { _ = setrlimit(RLIMIT_NOFILE, &originalLimits) }
+
+        // Raise only the soft limit above `kern.maxfilesperproc`.
+        var raisedLimits = originalLimits
+        raisedLimits.rlim_cur = try #require(Self.softLimitAboveMaxFilesPerProcess())
+        try #require(setrlimit(RLIMIT_NOFILE, &raisedLimits) == 0)
+
+        // The process still can't open more than `getdtablesize()` descriptors.
+        let effectiveLimit = Int(getdtablesize())
+        #expect(effectiveLimit < Int(raisedLimits.rlim_cur))
+
+        let maxFDs = try readMetric(\.maxFileDescriptors)
+        #expect(maxFDs == effectiveLimit)
     }
 
     @Test("Page fault counts match getrusage cross-check")
@@ -211,6 +235,29 @@ struct DarwinDataProviderTests {
     // MARK: - Helpers
 
     private let pageSize = sysconf(Int32(_SC_PAGESIZE))
+
+    /// Returns a soft `RLIMIT_NOFILE` value above `kern.maxfilesperproc`
+    /// that the system accepts as is, or `nil` if there's none.
+    private static func softLimitAboveMaxFilesPerProcess() -> rlim_t? {
+        var maxFilesPerProcess: Int32 = 0
+        var size = MemoryLayout<Int32>.size
+        guard sysctlbyname("kern.maxfilesperproc", &maxFilesPerProcess, &size, nil, 0) == 0,
+            maxFilesPerProcess > 0
+        else { return nil }
+        var originalLimits = rlimit()
+        guard getrlimit(RLIMIT_NOFILE, &originalLimits) == 0 else { return nil }
+        let softLimit = rlim_t(maxFilesPerProcess) + 1024
+        guard softLimit <= originalLimits.rlim_max else { return nil }
+
+        // Check that the system neither rejects nor clamps the raised soft limit.
+        defer { _ = setrlimit(RLIMIT_NOFILE, &originalLimits) }
+        var raisedLimits = originalLimits
+        raisedLimits.rlim_cur = softLimit
+        guard setrlimit(RLIMIT_NOFILE, &raisedLimits) == 0 else { return nil }
+        var readBackLimits = rlimit()
+        guard getrlimit(RLIMIT_NOFILE, &readBackLimits) == 0, readBackLimits.rlim_cur == softLimit else { return nil }
+        return softLimit
+    }
 
     /// Reads the current system metrics snapshot.
     ///
