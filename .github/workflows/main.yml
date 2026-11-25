@@ -10,72 +10,64 @@ on:
     - cron: "0 8,20 * * *"
 
 jobs:
-  unit-tests:
-    name: Unit tests
-    uses: apple/swift-nio/.github/workflows/unit_tests.yml@main
+  tests:
+    name: Tests
+    uses: swiftlang/github-workflows/.github/workflows/package_test.yml@0.0.19
     with:
-      linux_6_1_enabled: false
-      linux_6_2_arguments_override: "-Xswiftc -warnings-as-errors --explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
-      linux_6_3_arguments_override: "-Xswiftc -warnings-as-errors --explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
-      linux_6_4_arguments_override: "-Xswiftc -warnings-as-errors --explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
-      linux_nightly_next_arguments_override: "--explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
-      linux_nightly_main_arguments_override: "--explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable"
-
-  macos-tests:
-    name: macOS tests
-    uses: apple/swift-nio/.github/workflows/macos_tests.yml@main
-    with:
-      runner_pool: nightly
-      build_scheme: swift-system-metrics
-      debug_output_enabled: true
-      xcode_16_3_enabled: false
-      xcode_16_4_enabled: false
-      xcode_26_0_enabled: false
-      xcode_26_1_enabled: false
-      xcode_26_2_enabled: false
-      swift_6_1_enabled: false
-      swift_6_2_enabled: true
-      swift_6_3_enabled: true
-      swift_6_4_enabled: true
-      macos_xcode_test_enabled: true
-      ios_xcode_test_enabled: false
-      watchos_xcode_test_enabled: false
-      tvos_xcode_test_enabled: false
-      visionos_xcode_test_enabled: false
-
-  static-sdk:
-    name: Static SDK
-    uses: apple/swift-nio/.github/workflows/static_sdk.yml@main
-
-  release-builds:
-    name: Release builds
-    uses: apple/swift-nio/.github/workflows/release_builds.yml@main
-
-  construct-example-packages-matrix:
-    name: Construct example packages matrix
-    runs-on: ubuntu-latest
-    outputs:
-      example-packages-matrix: '${{ steps.generate-matrix.outputs.example-packages-matrix }}'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - id: generate-matrix
-        run: echo "example-packages-matrix=$(curl -s https://raw.githubusercontent.com/apple/swift-nio/main/scripts/generate_matrix.sh | bash)" >> "$GITHUB_OUTPUT"
-        env:
-          MATRIX_LINUX_SETUP_COMMAND: git config --global --add safe.directory /swift-system-metrics
-          MATRIX_LINUX_COMMAND: ./Scripts/test-examples.sh
-          MATRIX_LINUX_5_10_ENABLED: false
-          MATRIX_LINUX_6_0_ENABLED: false
-          MATRIX_LINUX_6_1_ENABLED: false
-          MATRIX_LINUX_NIGHTLY_NEXT_ENABLED: false
-          MATRIX_LINUX_NIGHTLY_MAIN_ENABLED: false
+      # Linux: debug tests (strict flags on releases, no -warnings-as-errors on nightlies) and
+      # release builds (no extra flags), matching the former unit_tests.yml and release_builds.yml jobs.
+      linux_command: |
+        Debug-Test:
+          command: swift test -Xswiftc -warnings-as-errors --explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable
+          versions: ["current-2", "current-1", "current"]
+        Debug-Test-Nightly:
+          command: swift test --explicit-target-dependency-import-check error -Xswiftc -require-explicit-sendable
+          versions: ["nightly-release", "nightly-main"]
+        Release-Build: swift build -c release
+      macos_runner_pool: nightly
+      macos_swift_versions: '["current-2", "current-1", "current"]'
+      macos_xcode_versions: '["latest-beta"]'
+      xcode_scheme: swift-system-metrics
+      xcode_debug_output: true
+      # Simulator tests (test: true for iOS/watchOS/tvOS/visionOS) are disabled due to instability, see #128.
+      xcode_targets: |
+        macOS:
+          build: true
+          test: true
+        Catalyst:
+          build: true
+          test: true
+        iOS:
+          build: true
+        watchOS:
+          build: true
+        tvOS:
+          build: true
+        visionOS:
+          build: true
+      linux_static_sdk_versions: '["current", "nightly-main"]'
+      enable_windows: false
+      enable_macos_swiftly: false
+      enable_wasm_sdk_build: false
+      enable_embedded_wasm_sdk_build: false
+      enable_android_sdk_build: false
+      enable_cxx_interop: false
+      enable_freebsd: false
 
   example-packages:
     name: Example packages
-    needs: construct-example-packages-matrix
-    uses: apple/swift-nio/.github/workflows/swift_test_matrix.yml@main
+    uses: swiftlang/github-workflows/.github/workflows/package_test.yml@0.0.19
     with:
-      name: "Example packages"
-      matrix_string: '${{ needs.construct-example-packages-matrix.outputs.example-packages-matrix }}'
+      name: example-packages
+      linux_swift_versions: '["current-2", "current-1", "current"]'
+      linux_setup_command: git config --global --add safe.directory /swift-system-metrics
+      linux_command: ./Scripts/test-examples.sh
+      enable_macos: false
+      enable_macos_swiftly: false
+      enable_windows: false
+      enable_linux_static_sdk_build: false
+      enable_wasm_sdk_build: false
+      enable_embedded_wasm_sdk_build: false
+      enable_android_sdk_build: false
+      enable_cxx_interop: false
+      enable_freebsd: false
